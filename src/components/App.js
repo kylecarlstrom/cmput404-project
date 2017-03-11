@@ -5,6 +5,7 @@ import CreatePost from './CreatePost';
 import FriendList from './FriendList';
 import PostList from './PostList';
 import Sidebar from './Sidebar';
+import UserAccount from './UserAccount'
 import '../../style/style.scss';
 import * as actions from '../actions';
 import schema from '../schema';
@@ -31,6 +32,9 @@ class App extends Component {
 
 
   render() {
+    // TODO: hardcoded login status
+    let isLoggedIn = true;
+
     const contentPosts = () => (
         <Col md={9}>
           <CreatePost
@@ -61,29 +65,25 @@ class App extends Component {
       content = contentPosts(); 
     }
 
-    return (
-      <div className='coolbears-app'>
-        <Grid>
-          <Row>
-            <Col md={3}>
-              <Sidebar updateContent ={this.updateContent} />
-            </Col>
-            {/*<Col md={9}>
-              <CreatePost
-                addPost={this.props.addPost}
-                users={this.props.users}
-              />
-              <PostList
-                posts={this.props.posts}
-                addComment={this.props.addComment}
-              />
-            </Col>*/}
-            {content}
+    if (isLoggedIn){
+      return (
+        <div className='coolbears-app'>
+          <Grid>
+            <Row>
+              <Col md={3}>
+                <Sidebar updateContent ={this.updateContent} />
+              </Col>
+              {content}
+            </Row>
+          </Grid>
+        </div>
+      );
+   }else{
 
-          </Row>
-        </Grid>
-      </div>
+    return(
+      <UserAccount/>
     );
+   }
   }
 }
 

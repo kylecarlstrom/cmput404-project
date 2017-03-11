@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import FriendListItem from './FriendListItem';
-import {ListGroup} from 'react-bootstrap'
+import {ListGroup} from 'react-bootstrap';
 
 class FriendList extends Component {
   render() {
