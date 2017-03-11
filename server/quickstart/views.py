@@ -89,19 +89,21 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
         currentUserPosts = Post.objects.all().filter(visibility="PRIVATE", pk=currentUser.pk) # TODO: test currentUser.pk works
         friendOfAFriendPosts = None
         friendPosts = self.get_queryset_friends(currentUser)
-        serverOnlyPosts = None
-        return publicPosts | currentUserPosts | friendPosts
+        serverOnlyPosts = Post.objects.all().filter(visibility="SERVERONLY") # TODO: check that user is on our server
+        return publicPosts | currentUserPosts | friendPosts | serverOnlyPosts
 
-    def get_queryset_friends(self, currentUser):
+    def get_friends_of_authorPK(self, authorPK):
         following_pks = []
-        authorPK = currentUser.pk
         following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
         for authorFromFollowing in following:
             following_pks.append(authorFromFollowing['follows'])
 
         followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
 
-        friendsOfCurrentUser = followed.filter(user__in=following_pks)
+        return followed.filter(user__in=following_pks)
+
+    def get_queryset_friends(self, currentUser):
+        friendsOfCurrentUser = self.get_friends_of_authorPK(currentUser.pk)
 
         return Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
 
