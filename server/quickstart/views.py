@@ -77,3 +77,14 @@ class CurrentFriendsList(APIView):
 class FriendsList(generics.ListCreateAPIView):
     queryset = FollowingRelationship.objects.all()
     serializer_class = FollowingRelationshipSerializer
+
+
+class AllPostsAvailableToCurrentUser(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        currentUser = self.request.user
+
+        publicPosts = Post.objects.all().filter(visibility="PUBLIC")
+        currentUserPosts = Post.objects.all().filter(visibility="PRIVATE", pk=currentUser.pk)
+        return publicPosts | currentUserPosts
