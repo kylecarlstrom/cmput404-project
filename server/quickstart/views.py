@@ -79,3 +79,40 @@ class CurrentFriendsList(generics.ListCreateAPIView):
 class FriendsList(generics.ListCreateAPIView):
     queryset = FollowingRelationship.objects.all()
     serializer_class = FollowingRelationshipSerializer
+
+
+class AllPostsAvailableToCurrentUser(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        currentUser = self.request.user
+
+        publicPosts = Post.objects.all().filter(visibility="PUBLIC")
+        currentUserPosts = Post.objects.all().filter(visibility="PRIVATE", pk=currentUser.pk) # TODO: test currentUser.pk works
+        friendOfAFriendPosts = self.get_queryset_friends_of_a_friend(currentUser)
+        friendPosts = self.get_queryset_friends(currentUser)
+        serverOnlyPosts = Post.objects.all().filter(visibility="SERVERONLY") # TODO: check that user is on our server
+        return publicPosts | currentUserPosts | friendPosts | serverOnlyPosts | friendOfAFriendPosts
+
+    def get_queryset_friends_of_a_friend(self, currentUser):
+        currentUserFriends = self.get_friends_of_authorPK(currentUser.pk)
+        temp = self.get_friends_of_authorPK(currentUser.pk)
+        for f in currentUserFriends:
+            temp = temp | self.get_friends_of_authorPK(f["user"])
+        return Post.objects.all().filter(author__in=temp).filter(visibility="FOAF")
+
+    def get_friends_of_authorPK(self, authorPK):
+        following_pks = []
+        following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
+        for authorFromFollowing in following:
+            following_pks.append(authorFromFollowing['follows'])
+
+        followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
+
+        return followed.filter(user__in=following_pks)
+
+    def get_queryset_friends(self, currentUser):
+        friendsOfCurrentUser = self.get_friends_of_authorPK(currentUser.pk)
+
+        return Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
+
