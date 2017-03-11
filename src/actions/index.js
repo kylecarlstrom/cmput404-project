@@ -1,13 +1,13 @@
 import * as types from '../types';
 import uuid from 'uuid/v1';
 
-export function addComment(text, postId, user) {
+export function addComment(comment, postId, user) {
   return {
     type: types.ADD_COMMENT,
     postId,
     comment: {
       id: uuid(),
-      text,
+      comment,
       author: user
     }
   };
@@ -18,8 +18,8 @@ export function addPost(post, user) {
     type: types.ADD_POST,
     post: {
       id: uuid(),
-      format: post.format,
-      text: post.text,
+      contentType: post.contentType,
+      title: post.title,
       user_with_permission: post.user_with_permission,
       author: user,
       comments: []

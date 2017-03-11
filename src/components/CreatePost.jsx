@@ -10,7 +10,7 @@ class CreatePost extends Component {
     this.state = this.getInitialState();
 
     this.handleTextChange = this.handleTextChange.bind(this);
-    this.handleTextFormatChange = this.handleTextFormatChange.bind(this);
+    this.handleContentTypeChange = this.handleContentTypeChange.bind(this);
     this.handlePost = this.handlePost.bind(this);
     this.handlePermissionChange = this.handlePermissionChange.bind(this);
   }
@@ -18,14 +18,14 @@ class CreatePost extends Component {
   getInitialState() {
     return {
       permission: PERMISSIONS.FRIENDS.value,
-      text: '',
-      textFormat: 'plaintext'
+      title: '',
+      contentType: 'plaintext'
     };
   }
 
   handleTextChange(event) {
     this.setState({
-      text: event.target.value
+      title: event.target.value
     });
   }
 
@@ -33,17 +33,17 @@ class CreatePost extends Component {
     // handle image upload
   }
 
-  handleTextFormatChange(event) {
+  handleContentTypeChange(event) {
     this.setState({
-      textFormat: event.target.value
+      contentType: event.target.value
     });
   }
 
   handlePost() {
-    if (this.state.text) {
+    if (this.state.title) {
       this.props.addPost({
-        text: this.state.text,
-        format: this.state.textFormat,
+        title: this.state.title,
+        format: this.state.contentType,
         permission: this.state.permission,
         user_with_permission: this.state.user_with_permission
       });
@@ -87,22 +87,22 @@ class CreatePost extends Component {
       <div className='create-post'>
         <FormControl
           type='text'
-          value={this.state.text}
+          value={this.state.title}
           placeholder='Whats on your mind?'
           onChange={this.handleTextChange}/>
         <ButtonToolbar className='post-options'>
           <ButtonGroup className='post-formats'>
             <Radio
-              checked={this.state.textFormat === 'plaintext'}
+              checked={this.state.contentType === 'plaintext'}
               inline={true}
-              onChange={this.handleTextFormatChange}
+              onChange={this.handleContentTypeChange}
               value='plaintext'>
               Plain Text
             </Radio>
             <Radio
-              checked={this.state.textFormat === 'markdown'}
+              checked={this.state.contentType === 'markdown'}
               inline={true}
-              onChange={this.handleTextFormatChange}
+              onChange={this.handleContentTypeChange}
               value='markdown'>
               Markdown
             </Radio>

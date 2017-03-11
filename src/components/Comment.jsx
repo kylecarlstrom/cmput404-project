@@ -4,7 +4,7 @@ class Comment extends Component {
   render() {
     return (
       <div className='comment'>
-        <p><strong className='author-name'>{this.props.author.name}</strong>{this.props.text}</p>
+        <p><strong className='author-name'>{this.props.author.name}</strong>{this.props.comment}</p>
       </div>
     );
   }
@@ -12,7 +12,7 @@ class Comment extends Component {
 
 Comment.propTypes = {
   author: PropTypes.object.isRequired,    
-  text: PropTypes.string.isRequired
+  comment: PropTypes.string.isRequired
 };
 
 export default Comment;

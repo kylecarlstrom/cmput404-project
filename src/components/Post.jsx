@@ -34,10 +34,10 @@ class Post extends Component {
       <div className='post'>
           <div className='post-header'>
             <h4>
-              {this.props.author.name}
+              {this.props.author.displayName}
             </h4>
             <div className='post-body'>
-              {this.props.text}
+              {this.props.title}
             </div>
 
           </div>
@@ -66,7 +66,7 @@ Post.propTypes = {
   author: PropTypes.object.isRequired,
   comments: PropTypes.array,   
   id: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired
 };
 
 export default Post;

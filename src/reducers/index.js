@@ -9,24 +9,24 @@ const mockposts = [
     id: '20525',
     author: {
       id: '43231',
-      name: 'Ken Adams'
+      displayName: 'Ken Adams'
     },
-    text: 'I can see clearly now',
+    title: 'I can see clearly now',
     comments: [
       {
         id: '1232',
         author: {
           id: '96853',
-          name: 'James Bond'
+          displayName: 'James Bond'
         },
-        text: 'You wot?'
+        comment: 'You wot?'
       }, {
         id: '7653',
         author: {
           id: '73841',
-          name: 'Moriarty'
+          displayName: 'Moriarty'
         },
-        text: 'yeah wot'
+        comment: 'yeah wot'
       }
     ]
   },
@@ -34,9 +34,9 @@ const mockposts = [
     id: '10241',
     author: {
       id: '96853',
-      name: 'James Bond'
+      displayName: 'James Bond'
     },
-    text: 'UofA is better than UofC',
+    title: 'UofA is better than UofC',
     comments: []
   }
 ];
