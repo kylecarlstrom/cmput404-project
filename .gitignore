@@ -15,3 +15,12 @@ build
 npm-debug.log
 .vscode
 env
+
+# python bin files
+*.pyc
+
+# python virtual environments
+venv
+
+# our persistance
+db.sqlite3
