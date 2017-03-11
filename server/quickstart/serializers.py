@@ -55,3 +55,9 @@ class PostSerializer(serializers.ModelSerializer):
             'contentType': data['contentType'],
             'author': Author.objects.get(pk=data['author']),
         }
+
+class FriendsSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            "authors": [x['user'] for x in obj]
+        }

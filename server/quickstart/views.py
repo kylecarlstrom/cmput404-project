@@ -9,11 +9,12 @@
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from models import Comment, Post, Author, FollowingRelationship
-from serializers import CommentSerializer, PostSerializer, AuthorSerializer, FollowingRelationshipSerializer
+from serializers import CommentSerializer, PostSerializer, AuthorSerializer, FollowingRelationshipSerializer, FriendsSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
+from rest_framework import serializers
 
 
 class PostList(generics.ListCreateAPIView):
@@ -59,20 +60,19 @@ class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
-class CurrentFriendsList(generics.ListCreateAPIView):
-    serializer_class = FollowingRelationshipSerializer
-
-    def get_queryset(self):
-
+class CurrentFriendsList(APIView):
+    def get(self, request, format=None, pk=None):
         following_pks = []
         authorPK = self.kwargs['pk']
-        following = FollowingRelationship.objects.filter(user=authorPK)
+        following = FollowingRelationship.objects.filter(user=authorPK).values('follows')
         for author in following:
-            following_pks.append(author.follows.pk)
+            following_pks.append(author['follows'])
 
-        followed = FollowingRelationship.objects.filter(follows=authorPK)
+        followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')
 
-        return followed.filter(pk__in=following_pks)
+        stuff = followed.filter(user__in=following_pks)
+        serializer = FriendsSerializer(stuff)
+        return Response(serializer.data)
 
 class FriendsList(generics.ListCreateAPIView):
     queryset = FollowingRelationship.objects.all()
