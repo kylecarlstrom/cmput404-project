@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'^posts/(?P<pk>[0-9]+)/$', views.PostDetail.as_view()),
     url(r'^authors/$', views.AuthorList.as_view()),
     url(r'^authors/(?P<pk>[0-9]+)/$', views.AuthorDetail.as_view()),
+    url(r'^authors/(?P<pk>[0-9]+)/friends/$', views.CurrentFriendsList.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', admin.site.urls),
+    url(r'^friends/$', views.FriendsList.as_view()),
 ]

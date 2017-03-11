@@ -11,11 +11,21 @@ class Author(models.Model):
         return self.displayName
 
 class Post(models.Model):
+
+    privacyChoices = (
+        ("PUBLIC", "PUBLIC"),
+        ("PRIVATE", "PRIVATE"),
+        ("FOAF", "FOAF"),
+        ("FRIENDS", "FRIENDS"),
+        ("SERVERONLY", "SERVERONLY"),
+    )
+
     title = models.CharField(max_length=140)
     content = models.CharField(max_length=140)
     description = models.CharField(max_length=140)
     contentType = models.CharField(max_length=32)
     author = models.ForeignKey(Author)
+    visibility = models.CharField(max_length=20, default="PUBLIC", choices=privacyChoices)
 
     def __unicode__(self):
         return self.title
@@ -36,5 +46,5 @@ class FollowingRelationship(models.Model):
     follows = models.ForeignKey(Author, related_name='follows')
 
     def __unicode__(self):
-        return str(self.user) + 'follows' + str(self.follows)
+        return str(self.user) + '_follows_' + str(self.follows)
 

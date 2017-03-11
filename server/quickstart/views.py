@@ -8,8 +8,8 @@
 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from models import Comment, Post, Author
-from serializers import CommentSerializer, PostSerializer, AuthorSerializer
+from models import Comment, Post, Author, FollowingRelationship
+from serializers import CommentSerializer, PostSerializer, AuthorSerializer, FollowingRelationshipSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -58,3 +58,22 @@ class AuthorList(generics.ListCreateAPIView):
 class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+
+class CurrentFriendsList(generics.ListCreateAPIView):
+    serializer_class = FollowingRelationshipSerializer
+
+    def get_queryset(self):
+
+        following_pks = []
+        authorPK = self.kwargs['pk']
+        following = FollowingRelationship.objects.filter(user=authorPK)
+        for author in following:
+            following_pks.append(author.follows.pk)
+
+        followed = FollowingRelationship.objects.filter(follows=authorPK)
+
+        return followed.filter(pk__in=following_pks)
+
+class FriendsList(generics.ListCreateAPIView):
+    queryset = FollowingRelationship.objects.all()
+    serializer_class = FollowingRelationshipSerializer
