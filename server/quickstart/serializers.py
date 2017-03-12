@@ -53,8 +53,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'content', 'description', 'contentType', 'author', 'comments', 'visibility')
-    
+        fields = ('id', 'title', 'content', 'description', 'contentType', 'author', 'comments', 'visibility', 'visibleTo')
+
     # TODO: Add proper validation in to_internal_value
     # http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
     def to_internal_value(self, data):
@@ -64,5 +64,6 @@ class PostSerializer(serializers.ModelSerializer):
             'description': data['description'],
             'contentType': data['contentType'],
             'author': User.objects.get(pk=self.context['author'].id),
-            'visibility': data['visibility']
+            'visibility': data['visibility'],
+            'visibleTo': data['visibleTo']
         }
