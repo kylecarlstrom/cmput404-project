@@ -106,6 +106,28 @@ class FriendsList(generics.ListCreateAPIView):
     queryset = FollowingRelationship.objects.all()
     serializer_class = FollowingRelationshipSerializer
 
+class CurrentFollowingList(generics.ListCreateAPIView):
+    """
+    list all people the current user follows
+    """
+    serializer_class = AuthorSerializer
+    def get_queryset(self):
+        following_pks = []
+        authorPK = self.kwargs['pk']
+        following = FollowingRelationship.objects.filter(user=authorPK).values('follows')
+        for author in following:
+            following_pks.append(author['follows'])
+
+        followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')
+        friends = followed.filter(user__in=following_pks)
+        friends_pks = []
+        for author in friends:
+            friends_pks.append(author['user'])
+
+        followingButNotFriend = following.exclude(follows__in=friends_pks)
+        print(followingButNotFriend)
+        authors = User.objects.filter(pk__in=followingButNotFriend)
+        return authors
 
 class AllPostsAvailableToCurrentUser(generics.ListAPIView):
     serializer_class = PostSerializer
