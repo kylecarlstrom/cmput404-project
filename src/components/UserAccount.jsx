@@ -8,12 +8,15 @@ class UserAccount extends Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      isLoginPage: true
     };
 
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
+    this.toggleLoginOrRegister = this.toggleLoginOrRegister.bind(this);
   }
 
   handleUsernameChange(event) {
@@ -30,21 +33,32 @@ class UserAccount extends Component {
 
   handleLogin() {
     if (this.state.username && this.state.password) {
-      console.log('called');
       this.props.attemptLogin(this.state.username, this.state.password);
     }
+  }
+
+  handleRegister() {
+    if (this.state.username && this.state.password) {
+      this.props.attemptRegister(this.state.username, this.state.password);
+    }
+  }
+
+  toggleLoginOrRegister() {
+    this.setState({
+      isLoginPage: !this.state.isLoginPage
+    });
   }
 
   render() {
     return (
       <Panel className="wrapper">
         <form >       
-          <h2>Please login</h2>
+          <h2>{this.state.isLoginPage ? "Please login" : "Please register"}</h2>
           <FormControl
             type="text"
             name="username"
             onChange={this.handleUsernameChange}
-            placeholder="Email Address"
+            placeholder="Username"
             required
             autoFocus />
           <FormControl
@@ -53,11 +67,14 @@ class UserAccount extends Component {
             onChange={this.handlePasswordChange}
             placeholder="Password"
             required />      
-          <a >need an account?</a>
+          <a onClick={this.toggleLoginOrRegister}>
+            {this.state.isLoginPage ? "Need an account?" : "I have an account"}
+          </a>
           <Button
             className="btn btn-lg btn-primary btn-block user-button-login"
-            onClick={this.handleLogin}
-          >Login</Button>   
+            onClick={this.state.isLoginPage ? this.handleLogin : this.handleRegister}>
+            {this.state.isLoginPage ? "Login" : "Register"}
+          </Button>   
         </form>
       </Panel>
     );
@@ -65,7 +82,8 @@ class UserAccount extends Component {
 }
 
 UserAccount.propTypes = {
-  attemptLogin: PropTypes.func.isRequired
+  attemptLogin: PropTypes.func.isRequired,
+  attemptRegister: PropTypes.func.isRequired
 };
 
 

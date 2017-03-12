@@ -119,7 +119,7 @@ export function attempLogin(username, password) {
       }
     }).then(res => {
       if (!res.ok) {
-        console.log('Invalied login credentials');
+        return Promise.reject();
       }
       return res;
     })
@@ -129,6 +129,35 @@ export function attempLogin(username, password) {
         ...res,
         password
       }));
+    })
+    .catch(err => {
+      console.log('Invalid login credentials');
     });
+  };
+}
+
+export function attemptRegister(username, password) {
+  return function(dispatch) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    return fetch('http://localhost:8000/register/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic '+btoa(username + ":" + password),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        password
+      }),
+    }).then(res => {
+      if (!res.ok) {
+        return Promise.reject();
+      }
+      return res;
+    })
+    .catch(err => {
+      console.log('Could not register user');
+    });
+    // TODO: Do something when successfully registered
   };
 }
