@@ -15,6 +15,7 @@ class CreatePost extends Component {
     this.handleContentTypeChange = this.handleContentTypeChange.bind(this);
     this.handlePost = this.handlePost.bind(this);
     this.handlePermissionChange = this.handlePermissionChange.bind(this);
+    this.contentText = this.contentText.bind(this);
   }
 
   getInitialState() {
@@ -77,8 +78,24 @@ class CreatePost extends Component {
       user_with_permission: event.user
     });
   }
+  contentText (){
+      if (this.state.contentType == "plaintext"){
+        return(
+          <FormControl
+            type='text'
+            value={this.state.content}
+            placeholder='Whats on your mind?'
+            onChange={this.handleContentChange}/>
+        )
+      }else{
+        return(
+          <p>haha fuck tard</p>
+        )
+      }
+    }
 
   render() {
+
     const staticOptions = [
       {
         value: PERMISSIONS.FRIENDS.value,
@@ -109,11 +126,7 @@ class CreatePost extends Component {
           value={this.state.title}
           placeholder='title'
           onChange={this.handleTitleChange}/>
-        <FormControl
-          type='text'
-          value={this.state.content}
-          placeholder='Whats on your mind?'
-          onChange={this.handleContentChange}/>
+        {this.contentText()}
         <FormControl
           type='text'
           value={this.state.description}
