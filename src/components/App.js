@@ -103,8 +103,9 @@ App.propTypes = {
 
 // TODO: Temporary, get this from somewhere else
 const user = {
-  id: 2,
-  username: 'BBBB'
+  id: 1,
+  username: 'joshdeng',
+  password: 'j69pbxq9'
 };
 // TODO: Move this into seperate file as container
 export default connect(
@@ -123,7 +124,7 @@ export default connect(
       dispatch(actions.addPost(post, user));
     },
     loadPosts: function() {
-      dispatch(actions.loadPosts());
+      dispatch(actions.loadPosts(user));
     }
   };
 })(App);

@@ -34,6 +34,8 @@ export function addPost(post, user) {
     fetch('http://localhost:8000/posts/', {
       method: 'POST',
       headers: {
+        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
+        'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
 
@@ -66,10 +68,18 @@ function finishLoadingPosts(result) {
   };
 }
 
-export function loadPosts() {
+export function loadPosts(user) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch("http://localhost:8000/posts/")
+    return fetch("http://localhost:8000/posts/",{
+      method: 'GET',
+      headers: {
+        // http://stackoverflow.com/questions/30203044/using-an-authorization-header-with-fetch-in-react-native
+        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+
+    })
       .then(res => res.json())
       .then(res => {
         dispatch(finishLoadingPosts(res.results));
