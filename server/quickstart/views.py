@@ -16,8 +16,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework import serializers
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 
 class PostList(generics.ListCreateAPIView):
@@ -26,8 +25,6 @@ class PostList(generics.ListCreateAPIView):
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
     def get_serializer_context(self):
@@ -38,16 +35,12 @@ class PostList(generics.ListCreateAPIView):
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
 class CommentList(generics.ListCreateAPIView):
     """
     List all comments, or create a new comment.
     """
     serializer_class = CommentSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     # http://www.django-rest-framework.org/api-guide/filtering/#filtering-against-the-current-user
     def get_queryset(self):
@@ -66,8 +59,6 @@ class CommentList(generics.ListCreateAPIView):
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
 class AuthorList(generics.ListCreateAPIView):
     """
@@ -75,17 +66,14 @@ class AuthorList(generics.ListCreateAPIView):
     """
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = (AllowAny,)
 
 class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
 class CurrentFriendsList(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         following_pks = []
@@ -103,14 +91,10 @@ class CurrentFriendsList(generics.ListCreateAPIView):
 class FriendsList(generics.ListCreateAPIView):
     queryset = FollowingRelationship.objects.all()
     serializer_class = FollowingRelationshipSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
 
 class AllPostsAvailableToCurrentUser(generics.ListAPIView):
     serializer_class = PostSerializer
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         currentUser = self.request.user
@@ -146,9 +130,6 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
 
 # https://richardtier.com/2014/02/25/django-rest-framework-user-endpoint/ (Richard Tier), No code but put in readme
 class LoginView(APIView):
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAuthenticated,)
- 
     def post(self, request):
         author = AuthorSerializer(request.user)
         return Response(data=author.data, status=200)
