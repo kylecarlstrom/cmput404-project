@@ -21,6 +21,10 @@ class App extends Component {
     this.updateContent=this.updateContent.bind(this);
   }
 
+  componentDidMount() {
+    this.props.loadPosts();
+  }
+
   updateContent(key){
     if (key == "posts-list"){
       this.setState({content:key});
@@ -91,6 +95,7 @@ App.propTypes = {
   addComment: PropTypes.func.isRequired,
   addPost: PropTypes.func.isRequired,
   friends: PropTypes.object.isRequired,
+  loadPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired
   
@@ -116,6 +121,9 @@ export default connect(
     },
     addPost: function(post) {
       dispatch(actions.addPost(post, user.id));
+    },
+    loadPosts: function() {
+      dispatch(actions.loadPosts());
     }
   };
 })(App);

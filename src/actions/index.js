@@ -43,14 +43,14 @@ export function addPost(post, user) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+
       },
       body: JSON.stringify({
         title: "abc",
         content: "def",
         description:"ggg",
         contentType:"ddfs",
-        author:"sdfsd",
+        author:1,
         visibility:"PUBLIC"
       }),
     })
@@ -62,4 +62,35 @@ export function addPost(post, user) {
     })
 
   };
+    // return {
+  //   type: types.ADD_POST,
+  //   post: {
+  //     id: uuid(),
+  //     contentType: post.contentType,
+  //     title: post.title,
+  //     user_with_permission: post.user_with_permission,
+  //     author: user,
+  //     comments: []
+  //   }
+  // };
   }
+
+
+
+function finishLoadingPosts(result) {
+  return {
+    type: types.FINISH_LOADING_POSTS,
+    posts: result
+  };
+}
+
+export function loadPosts() {
+  return function(dispatch) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    return fetch("http://" + window.location.hostname + ":8000/posts/")
+      .then(res => res.json())
+      .then(res => {
+        dispatch(finishLoadingPosts(res.results));
+      });
+  };
+}
