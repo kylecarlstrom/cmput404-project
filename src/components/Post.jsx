@@ -39,6 +39,12 @@ class Post extends Component {
             <div className='post-body'>
               {this.props.title}
             </div>
+            <div className='post-body'>
+              {this.props.content}
+            </div>
+            <div className='post-body'>
+              {this.props.description}
+            </div>
 
           </div>
           <div className='post-footer'>
@@ -65,8 +71,8 @@ Post.propTypes = {
   addComment: PropTypes.func.isRequired,
   author: PropTypes.object.isRequired,
   comments: PropTypes.array,   
-  id: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired
+  id: PropTypes.number.isRequired,
+  content: PropTypes.string.isRequired
 };
 
 export default Post;
