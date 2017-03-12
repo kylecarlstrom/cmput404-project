@@ -101,3 +101,30 @@ export function loadPosts(user) {
       });
   };
 }
+
+function logIn(username, password) {
+  return {
+    type: types.LOGGED_IN,
+    username,
+    password
+  };
+}
+
+export function attempLogin(username, password) {
+  return function(dispatch) {
+    console.log(username, password);
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    return fetch('http://localhost:8000/login/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic '+btoa(username + ":" + password)
+      }
+    }).then(res => {
+      if (res.ok) {
+        return dispatch(logIn(username, password));
+      } else {
+        console.log('Invalied login credentials');
+      }
+    });
+  };
+}

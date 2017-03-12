@@ -30,9 +30,6 @@ class App extends Component {
 
 
   render() {
-    // TODO: hardcoded login status
-    const isLoggedIn = true;
-
     const contentPosts = () => (
         <Col md={9}>
           <CreatePost
@@ -65,7 +62,7 @@ class App extends Component {
       content = contentPosts(); 
     }
 
-    if (isLoggedIn){
+    if (this.props.loggedIn){
       return (
         <div className='coolbears-app'>
           <Grid>
@@ -81,7 +78,9 @@ class App extends Component {
     }else{
 
       return(
-      <UserAccount/>
+        <UserAccount
+          attemptLogin={this.props.attempLogin}
+        />
       );
     }
   }
@@ -90,10 +89,11 @@ class App extends Component {
 App.propTypes = {
   addComment: PropTypes.func.isRequired,
   addPost: PropTypes.func.isRequired,
+  attempLogin: PropTypes.func.isRequired,
   friends: PropTypes.object.isRequired,
   loadPosts: PropTypes.func.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
   posts: PropTypes.array.isRequired
-  
 };
 
 // TODO: Temporary, get this from somewhere else
@@ -105,9 +105,11 @@ const user = {
 // TODO: Move this into seperate file as container
 export default connect(
   function(stateProps, ownProps) {
+    console.log(stateProps);
     return {
       posts: stateProps.posts,
-      friends: stateProps.friends
+      friends: stateProps.friends,
+      loggedIn: stateProps.app.loggedIn
     };
   }, function(dispatch, ownProps) {
   return {
@@ -121,6 +123,9 @@ export default connect(
     },
     loadPosts: function() {
       dispatch(actions.loadPosts(user));
+    },
+    attempLogin: function(username, password) {
+      dispatch(actions.attempLogin(username, password));
     }
   };
 })(App);

@@ -40,4 +40,19 @@ export function friends(state ={
   }
 }
 
-export default combineReducers({posts, friends});
+function app(state={loggedIn: false}, action) {
+  switch (action.type) {
+  case types.LOGGED_IN:
+    return {
+      ...state,
+      loggedIn: true,
+      username: action.username,
+      password: action.password
+    };
+  default:
+    return state;
+  }
+}
+
+
+export default combineReducers({posts, friends, app});

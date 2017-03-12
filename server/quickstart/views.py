@@ -144,3 +144,10 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
 
         return Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
 
+# https://richardtier.com/2014/02/25/django-rest-framework-user-endpoint/ (Richard Tier), No code but put in readme
+class LoginView(APIView):
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
+ 
+    def post(self, request):
+        return Response(status=200)

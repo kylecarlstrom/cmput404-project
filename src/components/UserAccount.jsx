@@ -5,75 +5,68 @@ class UserAccount extends Component {
   
   constructor(props) {
     super(props);
+
     this.state = {
-      type:"login"
+      username: '',
+      password: ''
     };
-    this.switchLogIn = this.switchLogIn.bind(this);
-    this.switchSignUp = this.switchSignUp.bind(this);
-  }
-  switchLogIn() {
-    this.setState({type:"login"});
+
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  switchSignUp(){
-    this.setState({type:"signup"});
+  handleUsernameChange(event) {
+    this.setState({
+      username: event.target.value
+    });
+  }
+
+  handlePasswordChange(event) {
+    this.setState({
+      password: event.target.value
+    });
+  }
+
+  handleLogin() {
+    if (this.state.username && this.state.password) {
+      console.log('called');
+      this.props.attemptLogin(this.state.username, this.state.password);
+    }
   }
 
   render() {
-    const logInContent = ()=>(
+    return (
       <Panel className="wrapper">
         <form >       
           <h2>Please login</h2>
-          <FormControl type="text" 
-          name="username" 
-          placeholder="Email Address" 
-          required 
-          autoFocus />
-          <FormControl type="password" 
-          name="password" 
-          placeholder="Password" 
-          required />      
-          <a onClick = {this.switchSignUp} >need an account?</a>
-          <Button className="btn btn-lg btn-primary btn-block user-button-login" 
-          type="submit">Login</Button>   
+          <FormControl
+            type="text"
+            name="username"
+            onChange={this.handleUsernameChange}
+            placeholder="Email Address"
+            required
+            autoFocus />
+          <FormControl
+            type="password"
+            name="password"
+            onChange={this.handlePasswordChange}
+            placeholder="Password"
+            required />      
+          <a >need an account?</a>
+          <Button
+            className="btn btn-lg btn-primary btn-block user-button-login"
+            onClick={this.handleLogin}
+          >Login</Button>   
         </form>
       </Panel>
     );
-
-    const signUpContent = () => (
-      <Panel className="wrapper">
-        <form >       
-          <h2>Sign Up</h2>
-          <FormControl type="text" 
-          name="username" 
-          placeholder="Email Address" 
-          required 
-          autoFocus />
-          <FormControl type="password" 
-          name="password" 
-          placeholder="Password" 
-          required />     
-          <FormControl type="password" 
-          name="password" 
-          placeholder="Re-Enter PW" 
-          required />  
-          <a onClick = {this.switchLogIn} >have an account already?</a>
-          <Button className="btn btn-lg btn-primary btn-block user-button-login" 
-          type="submit">Register</Button>   
-        </form>
-      </Panel>
-    );
-    if (this.state.type == "login"){
-      return (
-        logInContent()
-      );
-    }else{
-      return (
-        signUpContent()
-      );
-    }
   }
 }
+
+UserAccount.propTypes = {
+  attemptLogin: PropTypes.func.isRequired
+};
 
 
 export default UserAccount;
