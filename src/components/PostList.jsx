@@ -24,7 +24,7 @@ class PostList extends Component {
 PostList.propTypes = {
   addComment: PropTypes.func.isRequired,
   loadPosts: PropTypes.func.isRequired,
-  posts: PropTypes.array.isRequired
+  posts: PropTypes.array.isRequired,
 };
 
 export default PostList;

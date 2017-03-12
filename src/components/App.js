@@ -30,7 +30,7 @@ class App extends Component {
 
 
   render() {
-    console.log(user)
+    console.log(user);
     // TODO: hardcoded login status
     const isLoggedIn = true;
 

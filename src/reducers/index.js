@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import * as types from '../types';
 
-function posts(state=[], action) {
+export function posts(state=[], action) {
   switch (action.type) {
   case types.ADD_COMMENT:
     return state.map(post => {
@@ -28,7 +28,7 @@ function posts(state=[], action) {
   }
 }
 
-function friends(state ={
+export function friends(state ={
   friendList: [],
   friendRequests: []
 },action){
@@ -37,6 +37,5 @@ function friends(state ={
     return state;
   }
 }
-
 
 export default combineReducers({posts, friends});

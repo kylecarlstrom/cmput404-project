@@ -2,14 +2,10 @@ import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
 import * as types from '../../src/types';
-import posts from '../../src/reducers/index';
-import users from '../../src/reducers/index';
-import friends from '../../src/reducers/index';
+import { posts, friends } from '../../src/reducers/index';
 
 const baseState = {
   "posts": [],
-  "users": [],
-  "comments": [],
   "friends": {
     "friendList": [],
     "friendRequests": []
@@ -17,6 +13,21 @@ const baseState = {
 };
 
 describe('posts reducer', function () {
+  describe('add comment', () => {
+    it('should add comment', () => {
+      const action = {
+        type: types.ADD_COMMENT,
+        postId: 111,
+        comment: "hello"
+      };
+      const state = [{ id: 111, comments: [] }];
+      assert.deepEqual(
+        posts(state, action),
+        [{ id: 111, comments: ["hello"] }]
+      );
+    });
+  });
+
   describe('add post', () => {
     it('should add post', () => {
       const action = {
@@ -27,12 +38,9 @@ describe('posts reducer', function () {
       const state = {};
       assert.deepEqual(
         posts(state, action), {
-          ...baseState,
-          "posts": {
-            "pid": {
-              id: "pid",
-              payload: "payload"
-            }
+          "pid": {
+            id: "pid",
+            payload: "payload"
           }
         }
       );
@@ -47,10 +55,7 @@ describe('posts reducer', function () {
       };
       const state = {};
       assert.deepEqual(
-        posts(state, action), {
-          ...baseState,
-          posts: "posts"
-        }
+        posts(state, action), "posts"
       );
     });
   });
@@ -61,27 +66,12 @@ describe('posts reducer', function () {
       const state = {};
       assert.deepEqual(
         posts(state, action), {
-          ...baseState,
         }
       );
     });
   });
 });
 
-
-describe('users reducer', function () {
-  describe('default behavior', () => {
-    it('should return state', () => {
-      const action = {};
-      const state = {};
-      assert.deepEqual(
-        users(state, action), {
-          ...baseState,
-        }
-      );
-    });
-  });
-});
 
 describe('friends reducer', function () {
   describe('default behavior', () => {
@@ -90,7 +80,6 @@ describe('friends reducer', function () {
       const state = {};
       assert.deepEqual(
         friends(state, action), {
-          ...baseState,
         }
       );
     });

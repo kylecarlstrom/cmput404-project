@@ -9,6 +9,7 @@ describe('<PostList>', function () {
   const store={};
   const props = {
     addComment: function() {},
+    loadPosts: function() {},
     posts: []
   };
   it('Should render', () => {

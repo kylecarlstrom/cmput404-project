@@ -72,7 +72,7 @@ Post.propTypes = {
   author: PropTypes.object.isRequired,
   comments: PropTypes.array,   
   content: PropTypes.string.isRequired,
-  description: PropTypes,
+  description: PropTypes.string,
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired
 };
