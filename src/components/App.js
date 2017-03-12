@@ -76,10 +76,10 @@ class App extends Component {
         </div>
       );
     }else{
-
-      return(
+      return (
         <UserAccount
           attemptLogin={this.props.attempLogin}
+          attemptRegister={this.props.attemptRegister}
         />
       );
     }
@@ -90,6 +90,7 @@ App.propTypes = {
   addComment: PropTypes.func.isRequired,
   addPost: PropTypes.func.isRequired,
   attempLogin: PropTypes.func.isRequired,
+  attemptRegister: PropTypes.func.isRequired,
   friends: PropTypes.object.isRequired,
   loadPosts: PropTypes.func.isRequired,
   loggedIn: PropTypes.bool.isRequired,
@@ -124,6 +125,9 @@ export default connect(
       },
       attempLogin: function(username, password) {
         dispatch(actions.attempLogin(username, password));
+      },
+      attemptRegister: function(username, password) {
+        dispatch(actions.attemptRegister(username, password));
       }
     };
   })(App);

@@ -66,7 +66,6 @@ class AuthorList(generics.ListCreateAPIView):
     """
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
-    permission_classes = (AllowAny,)
 
 class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
@@ -133,3 +132,13 @@ class LoginView(APIView):
     def post(self, request):
         author = AuthorSerializer(request.user)
         return Response(data=author.data, status=200)
+
+"""
+Will return a 400 if the author exists and 201 created otherwise
+"""
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = (AllowAny,)
+    # http://stackoverflow.com/questions/27085219/how-can-i-disable-authentication-in-django-rest-framework#comment63774493_27086121
+    authentication_classes = []
