@@ -48,7 +48,7 @@ export function addPost(post, user) {
   return function(dispatch) {
 
    
-    fetch('/posts/', {
+    fetch(URL_PREFIX + '/posts/', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
@@ -62,7 +62,8 @@ export function addPost(post, user) {
         contentType: post.contentType,
         author: user.id,
         comments: post.comments,
-        visibility:post.permission
+        visibility:post.permission,
+        visibleTo: []
       }),
     })
     .then(res => res.json())
@@ -127,7 +128,7 @@ export function attempLogin(username, password) {
     })
     .then(res => res.json())
     .then(res => {
-      return dispatch(logIn({
+      dispatch(logIn({
         ...res,
         password
       }));
@@ -171,3 +172,86 @@ export function switchTabs(tab) {
     tab
   };
 }
+
+export function finishedGettingUsers(users) {
+  return {
+    type: types.LOADED_USERS,
+    users
+  };
+}
+
+export function getUsers(user) {
+  return function(dispatch) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    return Promise.all([
+      fetch(URL_PREFIX + "/authors/" + user.id + "/friends/", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
+        }
+      }),
+      fetch(URL_PREFIX + "/authors/", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
+        }
+      }),
+      fetch(URL_PREFIX + "/authors/" + user.id + "/following", {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
+        }
+      })
+    ])
+    .then(responses => {
+      for (let i = 0; i < responses.length; i++) {
+        if (!responses[i].ok) {
+          return Promise.reject();
+        }
+        return responses;
+      }
+    })
+    .then(responses => Promise.all(responses.map(res => res.json())))
+    .then(responses => {
+      const users = responses[1].results;
+      const friends = responses[0].results;
+      const following = responses[2].results;
+
+      const usersWithFriendStatus = users.map(user => ({
+        ...user,
+        isFriend: friends.filter(friend => user.id === friend.id).length !== 0,
+        isFollowing: following.filter(follow => user.id === follow.id).length !== 0
+      }));
+      return dispatch(finishedGettingUsers(usersWithFriendStatus));
+    })
+    .catch(err => {
+      console.log(err, 'Could not get friends');
+    });
+  };
+}
+
+// export function changeFollowStatus(follow, currentUser, userToFollow) {
+//   return function(dispatch) {
+//     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+//     return fetch(URL_PREFIX + '/friendrequest/', {
+//       method: follow ? 'POST' : 'DELETE',
+//       headers: {
+//         'Authorization': 'Basic '+btoa(currentUser.username + ":" + currentUser.password),
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         user: currentUser.id,
+//         follows: userToFollow.id
+//       }),
+//     }).then(res => {
+//       if (!res.ok) {
+//         return Promise.reject();
+//       }
+//       return res;
+//     })
+//     .catch(err => {
+//       console.log('Could not register user');
+//     });
+//     // TODO: Do something when successfully registered
+//   };
+// }
