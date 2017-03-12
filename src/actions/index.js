@@ -36,9 +36,7 @@ export function addPost(post, user) {
       headers: {
         'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         title: post.title,

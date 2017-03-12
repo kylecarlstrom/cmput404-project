@@ -62,5 +62,6 @@ class PostSerializer(serializers.ModelSerializer):
             'content': data['content'],
             'description': data['description'],
             'contentType': data['contentType'],
-            'author': User.objects.get(pk=self.context['author'].id)
+            'author': User.objects.get(pk=self.context['author'].id),
+            'visibility': data['visibility']
         }
