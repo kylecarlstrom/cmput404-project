@@ -63,7 +63,7 @@ export function addPost(post, user) {
 function finishLoadingPosts(result) {
   return {
     type: types.FINISH_LOADING_POSTS,
-    posts: result
+    posts: result || []
   };
 }
 
