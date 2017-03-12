@@ -36,6 +36,7 @@ class App extends Component {
 
 
   render() {
+    console.log(user)
     // TODO: hardcoded login status
     const isLoggedIn = true;
 
@@ -103,9 +104,9 @@ App.propTypes = {
 
 // TODO: Temporary, get this from somewhere else
 const user = {
-  id: 1,
-  username: 'joshdeng',
-  password: 'j69pbxq9'
+  id: 3,
+  username: 'a',
+  password: 'b'
 };
 // TODO: Move this into seperate file as container
 export default connect(
