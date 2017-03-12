@@ -4,7 +4,7 @@ import uuid from 'uuid/v1';
 let URL_PREFIX = 'http://' + window.location.hostname + ':8000';
 /*eslint-disable */
 if(process.env.NODE_ENV === 'production') {
-  URL_PREFIX = 'http://' + window.location.hostname;
+  URL_PREFIX = 'https://' + window.location.hostname;
 }
 /*eslint-enable */
 
@@ -212,7 +212,7 @@ export function getUsers(user) {
           'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
         }
       }),
-      fetch(URL_PREFIX + "/authors/" + user.id + "/following", {
+      fetch(URL_PREFIX + "/authors/" + user.id + "/following/", {
         method: 'GET',
         headers: {
           'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
@@ -246,28 +246,42 @@ export function getUsers(user) {
   };
 }
 
-// export function changeFollowStatus(follow, currentUser, userToFollow) {
-//   return function(dispatch) {
-//     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-//     return fetch(URL_PREFIX + '/friendrequest/', {
-//       method: follow ? 'POST' : 'DELETE',
-//       headers: {
-//         'Authorization': 'Basic '+btoa(currentUser.username + ":" + currentUser.password),
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({
-//         user: currentUser.id,
-//         follows: userToFollow.id
-//       }),
-//     }).then(res => {
-//       if (!res.ok) {
-//         return Promise.reject();
-//       }
-//       return res;
-//     })
-//     .catch(err => {
-//       console.log('Could not register user');
-//     });
-//     // TODO: Do something when successfully registered
-//   };
-// }
+function addFollower(currentUser, userToFollow) {
+  return {
+    type: types.FOLLOW_USER,
+    currentUser,
+    userToFollow
+  };
+}
+
+export function changeFollowStatus(follow, currentUser, userToFollow) {
+  return function(dispatch) {
+    if (!follow) {
+      return; // Uncomment when delete works
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    return fetch(URL_PREFIX + '/friendrequest/', {
+      method: follow ? 'POST' : 'DELETE',
+      headers: {
+        'Authorization': 'Basic '+btoa(currentUser.username + ":" + currentUser.password),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user: currentUser.id,
+        follows: userToFollow
+      }),
+    }).then(res => {
+      if (!res.ok) {
+        return Promise.reject();
+      }
+      return res;
+    })
+    .then(res => res.json())
+    .then(res => {
+      dispatch(getUsers(currentUser)); // Ideally we ould be smarter about this
+    })
+    .catch(err => {
+      console.log('Could not register user');
+    });
+  };
+}
