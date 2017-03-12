@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {FormControl, ButtonToolbar, ButtonGroup, Button, Glyphicon, Radio} from 'react-bootstrap';
 import {PERMISSIONS} from '../constants';
 import Select from 'react-select';
+import Markdown from 'react-markdown';
 import 'react-select/dist/react-select.css';
 
 class CreatePost extends Component {
@@ -89,7 +90,11 @@ class CreatePost extends Component {
         )
       }else{
         return(
-          <p>haha fuck tard</p>
+          <FormControl
+            value={this.state.content}
+            placeholder='Whats on your mind?'
+            onChange={this.handleContentChange}
+          />
         )
       }
     }
