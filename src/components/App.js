@@ -21,10 +21,6 @@ class App extends Component {
     this.updateContent=this.updateContent.bind(this);
   }
 
-  componentDidMount() {
-    this.props.loadPosts();
-  }
-
   updateContent(key){
     if (key == "posts-list"){
       this.setState({content:key});
@@ -49,6 +45,7 @@ class App extends Component {
           <PostList
             posts={this.props.posts}
             addComment={this.props.addComment}
+            loadPosts={this.props.loadPosts}
           />
         </Col>
       );
