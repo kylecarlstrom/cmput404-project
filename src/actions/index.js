@@ -21,20 +21,11 @@ export function addPost(post, user) {
 
   return function(dispatch) {
 
-    dispatch({type:types.ADD_POST,post: {
-      id: -1,
-      content: post.title,
-      title: post.title,
-      description: post.description,
-      contentType: post.contentType,
-      author:user,
-      visibility:post.permission,
-      comments: post.comments,
-    }});
+   
     fetch('http://localhost:8000/posts/', {
       method: 'POST',
       headers: {
-        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
+        'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json'
       },
@@ -49,6 +40,16 @@ export function addPost(post, user) {
       }),
     })
     .then((res) => {
+      dispatch({type:types.ADD_POST,post: {
+        id: -1,
+        content: post.title,
+        title: post.title,
+        description: post.description,
+        contentType: post.contentType,
+        author:user,
+        visibility:post.permission,
+        comments: post.comments,
+      }});
       location.reload();
     })
     .catch((err) => {
@@ -62,18 +63,18 @@ export function addPost(post, user) {
 function finishLoadingPosts(result) {
   return {
     type: types.FINISH_LOADING_POSTS,
-    posts: result
+    posts: result || []
   };
 }
 
 export function loadPosts(user) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch("http://localhost:8000/posts/",{
+    return fetch("http://localhost:8000/authors/posts/",{
       method: 'GET',
       headers: {
         // http://stackoverflow.com/questions/30203044/using-an-authorization-header-with-fetch-in-react-native
-        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
+        'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
         'Content-Type': 'application/x-www-form-urlencoded'
       }
 
