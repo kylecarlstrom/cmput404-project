@@ -1,7 +1,12 @@
 import * as types from '../types';
 import uuid from 'uuid/v1';
 
-const URL_PREFIX = 'http://' + window.location.hostname + ':8000';
+let URL_PREFIX = 'http://' + window.location.hostname + ':8000';
+/*eslint-disable */
+if(process.env.NODE_ENV === 'production') {
+  URL_PREFIX = 'http://' + window.location.hostname;
+}
+/*eslint-enable */
 
 export function addComment(comment, postId, user) {
  //call api
