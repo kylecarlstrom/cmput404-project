@@ -50,7 +50,7 @@ export function addPost(post, user) {
         content: "def",
         description:"ggg",
         contentType:"ddfs",
-        author:1,
+        author:2,
         visibility:"PUBLIC"
       }),
     })
