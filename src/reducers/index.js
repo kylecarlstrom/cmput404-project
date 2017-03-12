@@ -7,7 +7,9 @@ import {normalize} from 'normalizr';
 function posts(state=[], action) {
   switch (action.type) {
   case types.ADD_COMMENT:
+
     const post = state[action.postId];
+
     return {
       ...state,
       [action.postId]: {

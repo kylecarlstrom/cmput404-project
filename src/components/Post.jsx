@@ -16,7 +16,7 @@ class Post extends Component {
 
   handleAddComment() {
     if (this.state.newCommentText) {
-      this.props.addComment(this.state.newCommentText, this.props.id);
+      this.props.addComment(this.state.newCommentText, this.props.id, this.props.comments.length);
       this.setState({
         newCommentText: ''
       });

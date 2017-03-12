@@ -36,7 +36,6 @@ class App extends Component {
 
 
   render() {
-    console.log(user)
     // TODO: hardcoded login status
     const isLoggedIn = true;
 
@@ -119,8 +118,8 @@ export default connect(
     };
   }, function(dispatch, ownProps) {
   return {
-    addComment: function(text, postId) {
-      dispatch(actions.addComment(text, postId, user.id));
+    addComment: function(text, postId, commentsLength) {
+      dispatch(actions.addComment(text, postId, user, commentsLength));
     },
     addPost: function(post,postsLength) {
       dispatch(actions.addPost(post, user,postsLength));

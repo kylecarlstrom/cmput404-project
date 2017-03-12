@@ -1,20 +1,44 @@
 import * as types from '../types';
 import uuid from 'uuid/v1';
 
-export function addComment(comment, postId, user) {
+export function addComment(comment, postId, user, commentsLength) {
  //call api
  
 
-  return {
-    type: types.ADD_COMMENT,
-    postId,
-    comment: {
-      id: uuid(),
-      comment,
-      author: user
-    }
-  };
+  // return {
+  //   type: types.ADD_COMMENT,
+  //   postId,
+  //   comment: {
+  //     id: uuid(),
+  //     comment,
+  //     author: user
+  //   }
+  // };
+  return function(dispatch) {
+   
+    fetch('http://localhost:8000/posts/'+String(postId)+'/comments/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        comment:comment
+      }),
+    })
+    .then(res => res.json())
+    .then((res) => {
+      dispatch({type:types.ADD_COMMENT,
+        postId: postId,
+        comment: res
+      });
+     // location.reload();
+    })
+    .catch((err) => {
 
+    });
+  };
 }
 
 export function addPost(post, user,postsLength) {
