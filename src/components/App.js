@@ -96,36 +96,34 @@ App.propTypes = {
   posts: PropTypes.array.isRequired
 };
 
-// TODO: Temporary, get this from somewhere else
-const user = {
-  id: 1,
-  username: 'joshdeng',
-  password: 'j69pbxq9'
-};
 // TODO: Move this into seperate file as container
 export default connect(
   function(stateProps, ownProps) {
-    console.log(stateProps);
     return {
       posts: stateProps.posts,
       friends: stateProps.friends,
-      loggedIn: stateProps.app.loggedIn
+      loggedIn: stateProps.app.loggedIn,
+      user: stateProps.app.user
     };
-  }, function(dispatch, ownProps) {
-  return {
-
-    addComment: function(text, postId) {
-      dispatch(actions.addComment(text, postId, user));
-
-    },
-    addPost: function(post) {
-      dispatch(actions.addPost(post, user));
-    },
-    loadPosts: function() {
-      dispatch(actions.loadPosts(user));
-    },
-    attempLogin: function(username, password) {
-      dispatch(actions.attempLogin(username, password));
-    }
-  };
-})(App);
+  },
+  null,
+  function(stateProps, dispatchProps, ownProps) {
+    const {user} = stateProps;
+    const {dispatch} = dispatchProps;
+    return {
+      ...stateProps,
+      ...ownProps,
+      addComment: function(text, postId) {
+        dispatch(actions.addComment(text, postId, user));
+      },
+      addPost: function(post) {
+        dispatch(actions.addPost(post, user));
+      },
+      loadPosts: function() {
+        dispatch(actions.loadPosts(user));
+      },
+      attempLogin: function(username, password) {
+        dispatch(actions.attempLogin(username, password));
+      }
+    };
+  })(App);

@@ -150,4 +150,5 @@ class LoginView(APIView):
     permission_classes = (IsAuthenticated,)
  
     def post(self, request):
-        return Response(status=200)
+        author = AuthorSerializer(request.user)
+        return Response(data=author.data, status=200)

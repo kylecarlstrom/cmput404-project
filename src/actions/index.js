@@ -1,7 +1,7 @@
 import * as types from '../types';
 import uuid from 'uuid/v1';
 
-export function addComment(comment, postId, user, commentsLength) {
+export function addComment(comment, postId, user) {
  //call api
  
 
@@ -41,7 +41,7 @@ export function addComment(comment, postId, user, commentsLength) {
   };
 }
 
-export function addPost(post, user,postsLength) {
+export function addPost(post, user) {
 
   return function(dispatch) {
 
@@ -58,7 +58,7 @@ export function addPost(post, user,postsLength) {
         content: post.content,
         description: post.description,
         contentType: post.contentType,
-        author:user.id,
+        author: user.id,
         comments: post.comments,
         visibility:post.permission
       }),
@@ -90,7 +90,7 @@ export function loadPosts(user) {
       method: 'GET',
       headers: {
         // http://stackoverflow.com/questions/30203044/using-an-authorization-header-with-fetch-in-react-native
-        'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
+        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
         'Content-Type': 'application/x-www-form-urlencoded'
       }
 
@@ -102,17 +102,15 @@ export function loadPosts(user) {
   };
 }
 
-function logIn(username, password) {
+function logIn(user) {
   return {
     type: types.LOGGED_IN,
-    username,
-    password
+    user
   };
 }
 
 export function attempLogin(username, password) {
   return function(dispatch) {
-    console.log(username, password);
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     return fetch('http://localhost:8000/login/', {
       method: 'POST',
@@ -120,11 +118,17 @@ export function attempLogin(username, password) {
         'Authorization': 'Basic '+btoa(username + ":" + password)
       }
     }).then(res => {
-      if (res.ok) {
-        return dispatch(logIn(username, password));
-      } else {
+      if (!res.ok) {
         console.log('Invalied login credentials');
       }
+      return res;
+    })
+    .then(res => res.json())
+    .then(res => {
+      return dispatch(logIn({
+        ...res,
+        password
+      }));
     });
   };
 }
