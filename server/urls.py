@@ -22,6 +22,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from server.quickstart import views
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -39,5 +40,6 @@ urlpatterns = [
     url(r'^friendrequest/$', views.FriendsList.as_view()),
     url(r'^login/$', views.LoginView.as_view()),
     url(r'^register/$', views.RegisterView.as_view()),
-    url(r'^docs/', include('rest_framework_docs.urls')),
+    url(r'^$', TemplateView.as_view(template_name="react.html")),
+    url(r'^docs/', include('rest_framework_docs.urls'))
 ]
