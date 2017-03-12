@@ -45,6 +45,7 @@ class App extends Component {
           <CreatePost
             addPost={this.props.addPost}
             users={this.props.users}
+            postsLength={this.props.posts.length}
           />
           <PostList
             posts={this.props.posts}
@@ -104,9 +105,9 @@ App.propTypes = {
 
 // TODO: Temporary, get this from somewhere else
 const user = {
-  id: 3,
-  username: 'a',
-  password: 'b'
+  id: 1,
+  username: 'joshdeng',
+  password: 'j69pbxq9'
 };
 // TODO: Move this into seperate file as container
 export default connect(
@@ -121,8 +122,8 @@ export default connect(
     addComment: function(text, postId) {
       dispatch(actions.addComment(text, postId, user.id));
     },
-    addPost: function(post) {
-      dispatch(actions.addPost(post, user));
+    addPost: function(post,postsLength) {
+      dispatch(actions.addPost(post, user,postsLength));
     },
     loadPosts: function() {
       dispatch(actions.loadPosts(user));

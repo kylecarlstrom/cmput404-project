@@ -65,7 +65,7 @@ class CreatePost extends Component {
         permission: this.state.permission,
         // user_with_permission: this.state.user_with_permission
         "comments": []
-      });
+      },this.props.postsLength);
 
       this.setState(this.getInitialState());
     }
@@ -161,7 +161,8 @@ class CreatePost extends Component {
 
 CreatePost.propTypes = {
   addPost: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  postsLength: PropTypes.number.isRequired,
 };
 
 export default CreatePost;

@@ -17,7 +17,7 @@ export function addComment(comment, postId, user) {
 
 }
 
-export function addPost(post, user) {
+export function addPost(post, user,postsLength) {
 
   return function(dispatch) {
 
@@ -26,7 +26,7 @@ export function addPost(post, user) {
       method: 'POST',
       headers: {
         'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
       body: JSON.stringify({
@@ -41,8 +41,8 @@ export function addPost(post, user) {
     })
     .then((res) => {
       dispatch({type:types.ADD_POST,post: {
-        id: -1,
-        content: post.title,
+        id: postsLength+1,
+        content: post.content,
         title: post.title,
         description: post.description,
         contentType: post.contentType,
@@ -50,7 +50,7 @@ export function addPost(post, user) {
         visibility:post.permission,
         comments: post.comments,
       }});
-      location.reload();
+     // location.reload();
     })
     .catch((err) => {
 
