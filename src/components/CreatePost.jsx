@@ -33,13 +33,13 @@ class CreatePost extends Component {
     });
   }
 
-   handleContentChange(event) {
+  handleContentChange(event) {
     this.setState({
       content: event.target.value
     });
   }
 
-   handleDescriptionChange(event) {
+  handleDescriptionChange(event) {
     this.setState({
       description: event.target.value
     });
