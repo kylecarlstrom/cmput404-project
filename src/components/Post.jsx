@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Panel, Button, FormControl} from 'react-bootstrap';
 import CommentList from './CommentList';
+import Markdown from 'react-markdown';
 
 class Post extends Component {
   constructor(props) {
@@ -12,11 +13,12 @@ class Post extends Component {
 
     this.handleAddComment = this.handleAddComment.bind(this);
     this.handleChangeComment = this.handleChangeComment.bind(this);
+    this.textTypehandler = this.textTypehandler.bind(this);
   }
 
   handleAddComment() {
     if (this.state.newCommentText) {
-      this.props.addComment(this.state.newCommentText, this.props.id);
+      this.props.addComment(this.state.newCommentText, this.props.id, this.props.comments.length);
       this.setState({
         newCommentText: ''
       });
@@ -29,6 +31,23 @@ class Post extends Component {
     });
   }
 
+  textTypehandler(){
+    if (this.props.contentType == "plaintext"){
+      return(
+        <div className='post-body'>
+          {this.props.content}
+        </div>
+      );
+    }else{
+      return(
+        <Markdown
+          source={this.props.content}
+          escapeHtml
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <div className='post'>
@@ -39,9 +58,7 @@ class Post extends Component {
             <div className='post-body'>
               {this.props.title}
             </div>
-            <div className='post-body'>
-              {this.props.content}
-            </div>
+            {this.textTypehandler()}
             <div className='post-body'>
               {this.props.description}
             </div>
@@ -72,6 +89,7 @@ Post.propTypes = {
   author: PropTypes.object.isRequired,
   comments: PropTypes.array,   
   content: PropTypes.string.isRequired,
+  contentType: PropTypes.string.isRequired,  
   description: PropTypes.string,
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired

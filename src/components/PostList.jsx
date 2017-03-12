@@ -12,7 +12,7 @@ class PostList extends Component {
           <Post key={post.id}
             addComment={this.props.addComment}
             author={post.author}
-
+            contentType = {post.contentType}
             {...post}
           />
         ))}

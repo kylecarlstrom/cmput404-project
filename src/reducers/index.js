@@ -4,6 +4,7 @@ import * as types from '../types';
 export function posts(state=[], action) {
   switch (action.type) {
   case types.ADD_COMMENT:
+
     return state.map(post => {
       if (post.id === action.postId) {
         return {
@@ -13,14 +14,15 @@ export function posts(state=[], action) {
             action.comment
           ]
         };
+
       }
       return post;
     });
   case types.ADD_POST:
-    return {
-      [action.post.id]: action.post,
+    return [
+      action.post,
       ...state
-    };
+    ];
   case types.FINISH_LOADING_POSTS:
     return action.posts;
   default:

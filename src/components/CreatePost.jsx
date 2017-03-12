@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {FormControl, ButtonToolbar, ButtonGroup, Button, Glyphicon, Radio} from 'react-bootstrap';
 import {PERMISSIONS} from '../constants';
 import Select from 'react-select';
+import Markdown from 'react-markdown';
 import 'react-select/dist/react-select.css';
 
 class CreatePost extends Component {
@@ -15,6 +16,7 @@ class CreatePost extends Component {
     this.handleContentTypeChange = this.handleContentTypeChange.bind(this);
     this.handlePost = this.handlePost.bind(this);
     this.handlePermissionChange = this.handlePermissionChange.bind(this);
+    this.contentText = this.contentText.bind(this);
   }
 
   getInitialState() {
@@ -77,8 +79,28 @@ class CreatePost extends Component {
       user_with_permission: event.user
     });
   }
+  contentText (){
+    if (this.state.contentType == "plaintext"){
+      return(
+          <FormControl
+            type='text'
+            value={this.state.content}
+            placeholder='Whats on your mind?'
+            onChange={this.handleContentChange}/>
+      );
+    }else{
+      return(
+          <FormControl
+            value={this.state.content}
+            placeholder='Whats on your mind?'
+            onChange={this.handleContentChange}
+          />
+      );
+    }
+  }
 
   render() {
+
     const staticOptions = [
       {
         value: PERMISSIONS.FRIENDS.value,
@@ -109,11 +131,7 @@ class CreatePost extends Component {
           value={this.state.title}
           placeholder='title'
           onChange={this.handleTitleChange}/>
-        <FormControl
-          type='text'
-          value={this.state.content}
-          placeholder='Whats on your mind?'
-          onChange={this.handleContentChange}/>
+        {this.contentText()}
         <FormControl
           type='text'
           value={this.state.description}
@@ -161,7 +179,7 @@ class CreatePost extends Component {
 
 CreatePost.propTypes = {
   addPost: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
 };
 
 export default CreatePost;
