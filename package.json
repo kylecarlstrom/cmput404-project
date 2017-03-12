@@ -7,8 +7,8 @@
     "test": "eslint --ext .jsx --ext .js src/ test/ && mocha --compilers js:babel-core/register --require ignore-styles --recursive ./test",
     "test:nyan": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test --reporter nyan",
     "test:watch": "npm run test -- --watch",
-    "build": "webpack --progress --colors",
-    "postinstall": "node_modules/webpack/bin/webpack.js"
+    "build": "node_modules/webpack/bin/webpack.js -p --env production",
+    "postinstall": "node_modules/webpack/bin/webpack.js -p --env production"
   },
   "author": "",
   "license": "ISC",

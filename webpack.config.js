@@ -1,4 +1,19 @@
 /*eslint-disable*/
+var webpack = require('webpack')
+var isProd = (process.env.NODE_ENV === 'production');
+var plugins = [];
+if(isProd) {
+  plugins = [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': '"production"'
+      }
+    })
+  ];
+}
+
+
+
 module.exports = {
   entry: [
     './src/index.js'
@@ -31,5 +46,6 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     contentBase: './'
-  }
+  },
+  plugins: plugins
 };

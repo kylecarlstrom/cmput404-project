@@ -6,8 +6,10 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import App from './components/App';
 import reducers from './reducers';
-
 const logger = createLogger();
+/*eslint-disable */
+console.log(process.env.NODE_ENV);
+/*eslint-enable */
 
 /* https://github.com/zalmoxisus/redux-devtools-extension Mihail Diordiev (https://github.com/zalmoxisus) (MIT) */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
