@@ -1,10 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Row, Col} from 'react-bootstrap';
-import CreatePost from './CreatePost';
-import FriendList from './FriendList';
-import PostList from './PostList';
-import Sidebar from './Sidebar';
+import Container from './Container';
 import UserAccount from './UserAccount';
 import '../../style/style.scss';
 import * as actions from '../actions';
@@ -16,44 +12,21 @@ class App extends Component {
   }
 
   render() {
-    const contentPosts = () => (
-        <Col md={9}>
-          <CreatePost
-            addPost={this.props.addPost}
-            users={[]}
-
-          />
-          <PostList
-            posts={this.props.posts}
-            addComment={this.props.addComment}
-            loadPosts={this.props.loadPosts}
-          />
-        </Col>
-      );
-    const contentFriends = () => (
-        <Col md={9}>
-          <FriendList
-            friends={this.props.friends.friendList}
-            friendRequests={this.props.friends.friendRequests}
-          />
-        </Col>
-    );
     if (this.props.loggedIn){
       return (
-        <div className='coolbears-app'>
-          <Grid>
-            <Row>
-              <Col md={3}>
-                <Sidebar
-                  activeTab={this.props.activeTab}
-                  switchTabs={this.props.switchTabs} />
-              </Col>
-              {this.props.activeTab === 'stream' ? contentPosts(): contentFriends()}
-            </Row>
-          </Grid>
-        </div>
+        <Container
+          activeTab={this.props.activeTab}
+          addComment={this.props.addComment}
+          addPost={this.props.addPost}
+          changeFollowStatus={this.props.changeFollowStatus}
+          getUsers={this.props.getUsers}
+          loadPosts={this.props.loadPosts}
+          posts={this.props.posts}
+          switchTabs={this.props.switchTabs}
+          users={this.props.users}
+        />
       );
-    }else{
+    } else {
       return (
         <UserAccount
           attemptLogin={this.props.attempLogin}
@@ -71,12 +44,14 @@ App.propTypes = {
   addPost: PropTypes.func.isRequired,
   attempLogin: PropTypes.func.isRequired,
   attemptRegister: PropTypes.func.isRequired,
-  friends: PropTypes.object.isRequired,
+  changeFollowStatus: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
   loadPosts: PropTypes.func.isRequired,
   loggedIn: PropTypes.bool.isRequired,
   loggedInFail: PropTypes.bool,
   posts: PropTypes.array.isRequired,
-  switchTabs: PropTypes.func.isRequired
+  switchTabs: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired
 };
 
 // TODO: Move this into seperate file as container
@@ -84,7 +59,7 @@ export default connect(
   function(stateProps, ownProps) {
     return {
       posts: stateProps.posts,
-      friends: stateProps.friends,
+      users: stateProps.users,
       loggedIn: stateProps.app.loggedIn,
       loggedInFail: stateProps.app.loggedInFail,
       user: stateProps.app.user,
@@ -115,6 +90,12 @@ export default connect(
       },
       switchTabs: function(tab) {
         dispatch(actions.switchTabs(tab));
+      },
+      getUsers: function() {
+        dispatch(actions.getUsers(user));
+      },
+      changeFollowStatus: function(follow, userToFollow) {
+        dispatch(actions.changeFollowStatus(follow, user, userToFollow));
       }
     };
   })(App);

@@ -3,31 +3,36 @@ import FriendListItem from './FriendListItem';
 import {ListGroup} from 'react-bootstrap';
 
 class FriendList extends Component {
+  createUserList(people) {
+    return (
+      <ListGroup className='friend-list'>
+        {people.map(friend => (
+          <FriendListItem
+            key={friend.id}
+            changeFollowStatus={this.props.changeFollowStatus}
+            {...friend}
+          />
+        ))}
+      </ListGroup>
+    );
+  }
   render() {
     return (
       <div className='friend-page'>
-        <h2>Requests</h2>
-        <ListGroup className='friend-list'>
-          {this.props.friendRequests.map(friend => <FriendListItem key={friend.id}
-          {
-            ...friend}/>)
-          }
-        </ListGroup>
         <h2>Friends</h2>
-        <ListGroup className='friend-list'>
-          {this.props.friends.map(friend => <FriendListItem key={friend.id} 
-          {
-            ...friend}/>)
-          }
-        </ListGroup>
+        {this.createUserList(this.props.users.filter(user => user.isFriend))}
+        <h2>Following</h2>
+        {this.createUserList(this.props.users.filter(user => user.isFollowing))}
+        <h2>Everyone Else</h2>
+        {this.createUserList(this.props.users.filter(user => !(user.isFriend || user.isFollowing)))}
       </div>
     );
   }
 }
 
 FriendList.propTypes = {
-  friendRequests: PropTypes.array.isRequired,
-  friends: PropTypes.array.isRequired
+  changeFollowStatus: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired
 };
 
 export default FriendList;

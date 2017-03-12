@@ -28,11 +28,12 @@ export function posts(state=[], action) {
   }
 }
 
-export function friends(state ={
-  friendList: [],
-  friendRequests: []
-},action){
+export function users(state=[], action){
   switch (action.type) {
+  case types.LOADED_USERS:
+    return [
+      ...action.users
+    ];
   default:
     return state;
   }
@@ -63,5 +64,4 @@ function app(state={loggedIn: false, activeTab: 'stream'}, action) {
   }
 }
 
-
-export default combineReducers({posts, friends, app});
+export default combineReducers({posts, users, app});
