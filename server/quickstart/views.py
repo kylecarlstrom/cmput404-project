@@ -114,9 +114,9 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
 
     def get_queryset(self):
         currentUser = self.request.user
-
+        print(currentUser.pk)
         publicPosts = Post.objects.all().filter(visibility="PUBLIC")
-        currentUserPosts = Post.objects.all().filter(visibility="PRIVATE", pk=currentUser.pk) # TODO: test currentUser.pk works
+        currentUserPosts = Post.objects.all().filter(visibility="PRIVATE", author__id=currentUser.pk) # TODO: test currentUser.pk works
         friendOfAFriendPosts = self.get_queryset_friends_of_a_friend(currentUser)
         friendPosts = self.get_queryset_friends(currentUser)
         serverOnlyPosts = Post.objects.all().filter(visibility="SERVERONLY") # TODO: check that user is on our server
