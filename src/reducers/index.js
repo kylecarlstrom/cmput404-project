@@ -38,13 +38,18 @@ export function friends(state ={
   }
 }
 
-function app(state={loggedIn: false}, action) {
+function app(state={loggedIn: false, activeTab: 'stream'}, action) {
   switch (action.type) {
   case types.LOGGED_IN:
     return {
       ...state,
       loggedIn: true,
       user: action.user
+    };
+  case types.SWITCH_TABS:
+    return {
+      ...state,
+      activeTab: action.tab
     };
   default:
     return state;

@@ -13,21 +13,7 @@ import * as actions from '../actions';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      content : "posts-list"
-    };
-    this.updateContent=this.updateContent.bind(this);
   }
-
-  updateContent(key){
-    if (key == "posts-list"){
-      this.setState({content:key});
-    }
-    else if (key == "friends-list"){
-      this.setState({content:key});
-    }
-  }
-
 
   render() {
     const contentPosts = () => (
@@ -47,30 +33,22 @@ class App extends Component {
     const contentFriends = () => (
         <Col md={9}>
           <FriendList
-            friends = {this.props.friends.friendList}
-            friendRequests = {this.props.friends.friendRequests}
+            friends={this.props.friends.friendList}
+            friendRequests={this.props.friends.friendRequests}
           />
         </Col>
     );
-    let content=contentFriends();
-
-    if (this.state.content == "posts-list"){
-      content = contentPosts(); 
-    }else if (this.state.content == "friends-list"){
-      content = contentFriends();
-    }else{
-      content = contentPosts(); 
-    }
-
     if (this.props.loggedIn){
       return (
         <div className='coolbears-app'>
           <Grid>
             <Row>
               <Col md={3}>
-                <Sidebar updateContent ={this.updateContent} />
+                <Sidebar
+                  activeTab={this.props.activeTab}
+                  switchTabs={this.props.switchTabs} />
               </Col>
-              {content}
+              {this.props.activeTab === 'stream' ? contentPosts(): contentFriends()}
             </Row>
           </Grid>
         </div>
@@ -87,6 +65,7 @@ class App extends Component {
 }
 
 App.propTypes = {
+  activeTab: PropTypes.string.isRequired,
   addComment: PropTypes.func.isRequired,
   addPost: PropTypes.func.isRequired,
   attempLogin: PropTypes.func.isRequired,
@@ -94,7 +73,8 @@ App.propTypes = {
   friends: PropTypes.object.isRequired,
   loadPosts: PropTypes.func.isRequired,
   loggedIn: PropTypes.bool.isRequired,
-  posts: PropTypes.array.isRequired
+  posts: PropTypes.array.isRequired,
+  switchTabs: PropTypes.func.isRequired
 };
 
 // TODO: Move this into seperate file as container
@@ -104,7 +84,8 @@ export default connect(
       posts: stateProps.posts,
       friends: stateProps.friends,
       loggedIn: stateProps.app.loggedIn,
-      user: stateProps.app.user
+      user: stateProps.app.user,
+      activeTab: stateProps.app.activeTab
     };
   },
   null,
@@ -128,6 +109,9 @@ export default connect(
       },
       attemptRegister: function(username, password) {
         dispatch(actions.attemptRegister(username, password));
+      },
+      switchTabs: function(tab) {
+        dispatch(actions.switchTabs(tab));
       }
     };
   })(App);

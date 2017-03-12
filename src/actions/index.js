@@ -161,3 +161,11 @@ export function attemptRegister(username, password) {
     // TODO: Do something when successfully registered
   };
 }
+
+
+export function switchTabs(tab) {
+  return {
+    type: types.SWITCH_TABS,
+    tab
+  };
+}

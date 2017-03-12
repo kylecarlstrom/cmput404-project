@@ -4,35 +4,19 @@ import {ListGroup, ListGroupItem, Nav, NavItem} from 'react-bootstrap';
 class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      key:1
-    };
-    this.handleSelect=this.handleSelect.bind(this);
-  }
-  handleSelect(key) {
-    this.setState({key:key});
-    if (key == 1){
-      this.props.updateContent("posts-list");
-    }else if (key == 2){
-      this.props.updateContent("friends-list");
-    }
-   
   }
 
   render() {
     return (
       <div className='sidebar'>
         <h1>Coolbears</h1>
-
         <Nav 
-          bsStyle="pills" 
+          bsStyle="pills"
           stacked
-          activeKey={this.state.key}
-          onSelect={this.handleSelect}>
-          <NavItem 
-           eventKey={1} >Stream</NavItem>
-          <NavItem 
-           eventKey={2} >Following</NavItem>
+          activeKey={this.props.activeTab}
+          onSelect={this.props.switchTabs}>
+          <NavItem eventKey={'stream'}>Stream</NavItem>
+          <NavItem eventKey={'friends'}>Following</NavItem>
         </Nav>
       </div>
     );
@@ -40,7 +24,8 @@ class Sidebar extends Component {
 }
 
 Sidebar.propTypes = {
-  updateContent: PropTypes.func.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  switchTabs: PropTypes.func.isRequired,
 };
 
 export default Sidebar;
