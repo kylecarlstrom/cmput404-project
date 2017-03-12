@@ -104,7 +104,7 @@ App.propTypes = {
 // TODO: Temporary, get this from somewhere else
 const user = {
   id: 2,
-  displayName: 'BBBB'
+  username: 'BBBB'
 };
 // TODO: Move this into seperate file as container
 export default connect(

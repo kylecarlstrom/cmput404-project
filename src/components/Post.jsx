@@ -34,7 +34,7 @@ class Post extends Component {
       <div className='post'>
           <div className='post-header'>
             <h4>
-              {this.props.author.displayName}
+              {this.props.author.username}
             </h4>
             <div className='post-body'>
               {this.props.title}
