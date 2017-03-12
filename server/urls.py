@@ -40,6 +40,6 @@ urlpatterns = [
     url(r'^friendrequest/$', views.FriendsList.as_view()),
     url(r'^login/$', views.LoginView.as_view()),
     url(r'^register/$', views.RegisterView.as_view()),
-    url(r'^$', TemplateView.as_view(template_name="react.html")),
+    url(r'^$', TemplateView.as_view(template_name="react.html"), name="root"),
     url(r'^docs/', include('rest_framework_docs.urls'))
 ]
