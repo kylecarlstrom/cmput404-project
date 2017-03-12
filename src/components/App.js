@@ -104,9 +104,9 @@ App.propTypes = {
 
 // TODO: Temporary, get this from somewhere else
 const user = {
-  id: 3,
-  username: 'a',
-  password: 'b'
+  id: 1,
+  username: 'joshdeng',
+  password: 'j69pbxq9'
 };
 // TODO: Move this into seperate file as container
 export default connect(
