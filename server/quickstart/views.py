@@ -33,12 +33,15 @@ class PostList(generics.ListCreateAPIView):
         }
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Used for read-write-delete for a single post instance.
+    """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 class CommentList(generics.ListCreateAPIView):
     """
-    List all comments, or create a new comment.
+    List all comments of a post, or create a new comment.
     """
     serializer_class = CommentSerializer
 
@@ -57,6 +60,9 @@ class CommentList(generics.ListCreateAPIView):
             }
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Used for read-write-delete for a single comment instance.
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
@@ -68,10 +74,16 @@ class AuthorList(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
 
 class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Used for read-write-delete for a single Author instance.
+    """
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
 
 class CurrentFriendsList(generics.ListCreateAPIView):
+    """
+    List all friends of current author
+    """
     serializer_class = AuthorSerializer
 
     def get_queryset(self):
@@ -88,6 +100,9 @@ class CurrentFriendsList(generics.ListCreateAPIView):
         return authors
 
 class FriendsList(generics.ListCreateAPIView):
+    """
+    list all following relationships, or create one
+    """
     queryset = FollowingRelationship.objects.all()
     serializer_class = FollowingRelationshipSerializer
 
@@ -129,6 +144,7 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
 
 # https://richardtier.com/2014/02/25/django-rest-framework-user-endpoint/ (Richard Tier), No code but put in readme
 class LoginView(APIView):
+    "Login and get a response"
     def post(self, request):
         author = UserSerializer(request.user)
         return Response(data=author.data, status=200)

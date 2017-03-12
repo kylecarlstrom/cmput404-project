@@ -78,5 +78,8 @@ Reducer update item in an array: http://redux.js.org/docs/recipes/reducers/Immut
 - https://docs.djangoproject.com/en/1.10/ref/models/fields/#django.db.models.ForeignKey.on_delete (accessed on March 9, 2017)
 - Some code in server/quickstart/models.py is based on code written by http://stackoverflow.com/a/13496120 user1839132 (http://stackoverflow.com/users/1839132/user1839132) and modified by Kyle Carlstrom (CC-BY-SA 3.0)
 
+- Used DRF Docs for documentaions on the Django Rest Framework.  http://drfdocs.com/
+
+
 # About this project
 This project is for CMPUT 404, see the [project description here](https://github.com/abramhindle/CMPUT404-project-socialdistribution).

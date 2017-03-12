@@ -35,7 +35,8 @@ urlpatterns = [
     url(r'^authors/(?P<pk>[0-9]+)/$', views.AuthorDetail.as_view()),
     url(r'^authors/(?P<pk>[0-9]+)/friends/$', views.CurrentFriendsList.as_view()),
     url(r'^admin/', admin.site.urls),
-    url(r'^friends/$', views.FriendsList.as_view()),
+    url(r'^friendrequest/$', views.FriendsList.as_view()),
     url(r'^login/$', views.LoginView.as_view()),
-    url(r'^register/$', views.RegisterView.as_view())
+    url(r'^register/$', views.RegisterView.as_view()),
+    url(r'^docs/', include('rest_framework_docs.urls')),
 ]
