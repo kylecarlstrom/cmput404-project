@@ -10,7 +10,7 @@
 
 from models import Comment, Post, FollowingRelationship
 from django.contrib.auth.models import User
-from serializers import CommentSerializer, PostSerializer, AuthorSerializer, FollowingRelationshipSerializer
+from serializers import CommentSerializer, PostSerializer, AuthorSerializer, FollowingRelationshipSerializer, UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -130,7 +130,7 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
 # https://richardtier.com/2014/02/25/django-rest-framework-user-endpoint/ (Richard Tier), No code but put in readme
 class LoginView(APIView):
     def post(self, request):
-        author = AuthorSerializer(request.user)
+        author = UserSerializer(request.user)
         return Response(data=author.data, status=200)
 
 """
@@ -138,7 +138,7 @@ Will return a 400 if the author exists and 201 created otherwise
 """
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = AuthorSerializer
+    serializer_class = UserSerializer
     permission_classes = (AllowAny,)
     # http://stackoverflow.com/questions/27085219/how-can-i-disable-authentication-in-django-rest-framework#comment63774493_27086121
     authentication_classes = []
