@@ -112,6 +112,13 @@ function logIn(user) {
   };
 }
 
+function logInFail(user) {
+  return {
+    type: types.LOGGED_IN_FAILED,
+    user
+  };
+}
+
 export function attempLogin(username, password) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -122,7 +129,7 @@ export function attempLogin(username, password) {
       }
     }).then(res => {
       if (!res.ok) {
-        return Promise.reject();
+        return Promise.reject(res);
       }
       return res;
     })
@@ -134,7 +141,11 @@ export function attempLogin(username, password) {
       }));
     })
     .catch(err => {
-      console.log('Invalid login credentials');
+      console.log(err);
+      return dispatch(logInFail({
+        ...err,
+        password
+      }));
     });
   };
 }
