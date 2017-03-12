@@ -3,73 +3,7 @@ import * as types from '../types';
 import schema from '../schema';
 import {normalize} from 'normalizr';
 
-// Schema based on normalizr https://github.com/paularmstrong/normalizr/blob/master/docs/quickstart.md (MIT)
-const mockposts = [
-  {
-    id: '20525',
-    author: {
-      id: '43231',
-      displayName: 'Ken Adams'
-    },
-    title: 'I can see clearly now',
-    comments: [
-      {
-        id: '1232',
-        author: {
-          id: '96853',
-          displayName: 'James Bond'
-        },
-        comment: 'You wot?'
-      }, {
-        id: '7653',
-        author: {
-          id: '73841',
-          displayName: 'Moriarty'
-        },
-        comment: 'yeah wot'
-      }
-    ]
-  },
-  {
-    id: '10241',
-    author: {
-      id: '96853',
-      displayName: 'James Bond'
-    },
-    title: 'UofA is better than UofC',
-    comments: []
-  }
-];
-
-const mockFriends = [
-  {
-    id: '121212',
-    username: 'Sad Frog',
-    isFollower: true
-  },
-  {
-    id: '23232323',
-    username: 'Feelsbadman',
-    isFollower: true
-  }
-];
-
-const mockFriendRequests = [
-  {
-    id: '121212',
-    username: 'Happy Frog?',
-    isFollower: false
-  },
-  {
-    id: '23232323',
-    username: 'Feelsgoodman?',
-    isFollower: false
-  }
-];
-
-const mockState = normalize(mockposts, schema).entities;
-
-function posts(state=mockState.posts, action) {
+function posts(state=[], action) {
   switch (action.type) {
   case types.ADD_COMMENT:
     const post = state[action.postId];
@@ -88,12 +22,14 @@ function posts(state=mockState.posts, action) {
       [action.post.id]: action.post,
       ...state
     };
+  case types.FINISH_LOADING_POSTS:
+    return action.posts;
   default:
     return state;
   }
 }
 
-function comments(state=mockState.comments, action) {
+function comments(state=[], action) {
   switch (action.type) {
   case types.ADD_COMMENT:
     return {
@@ -105,7 +41,7 @@ function comments(state=mockState.comments, action) {
   }
 }
 
-function users(state=mockState.users, action) {
+function users(state=[], action) {
   switch (action.type) {
   default:
     return state;
@@ -113,8 +49,8 @@ function users(state=mockState.users, action) {
 }
 
 function friends(state ={
-  friendList: mockFriends,
-  friendRequests: mockFriendRequests
+  friendList: [],
+  friendRequests: []
 },action){
   switch (action.type) {
   default:
