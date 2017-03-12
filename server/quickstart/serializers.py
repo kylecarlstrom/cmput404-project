@@ -22,6 +22,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
         user.set_password(validated_data['password'])
+        user.is_active = False
         user.save()
         return user
 
