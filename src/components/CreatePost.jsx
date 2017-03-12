@@ -179,7 +179,7 @@ class CreatePost extends Component {
 
 CreatePost.propTypes = {
   addPost: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
 };
 
 export default CreatePost;

@@ -30,7 +30,6 @@ class App extends Component {
 
 
   render() {
-    console.log(user)
     // TODO: hardcoded login status
     const isLoggedIn = true;
 
@@ -39,6 +38,7 @@ class App extends Component {
           <CreatePost
             addPost={this.props.addPost}
             users={[]}
+
           />
           <PostList
             posts={this.props.posts}
@@ -111,8 +111,10 @@ export default connect(
     };
   }, function(dispatch, ownProps) {
   return {
+
     addComment: function(text, postId) {
       dispatch(actions.addComment(text, postId, user));
+
     },
     addPost: function(post) {
       dispatch(actions.addPost(post, user));
