@@ -1,5 +1,6 @@
 /* Add styles here */
 
+//variables
 @import 'variables.scss';
 
 //components
@@ -9,7 +10,7 @@
 @import 'components/FriendList.scss';
 @import 'components/UserAccout.scss';
 
-
+//global styles
 body {
     background-color: $primary-color-very-light;
 }

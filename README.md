@@ -4,10 +4,11 @@
 [https://coolbears.herokuapp.com/](https://coolbears.herokuapp.com/)
 
 # Installation of Client
+```
 npm install  
 npm start  
-
-http://localhost:8080/webpack-dev-server/  
+```
+[http://localhost:8080/webpack-dev-server/](http://localhost:8080/webpack-dev-server/)
 
 p.s. use sudo npm install on linux  
 
@@ -63,7 +64,7 @@ Bash
 ```
 Settings  
 ```
-heroku config:set DISABLE_COLLECTSTATIC=1
+> heroku config:set DISABLE_COLLECTSTATIC=1
 ```
 
 # Commiting

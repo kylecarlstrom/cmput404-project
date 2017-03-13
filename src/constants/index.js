@@ -1,3 +1,6 @@
+/**
+ * Constants for Permissions
+ */
 export const PERMISSIONS = Object.freeze({
   PUBLIC: Object.freeze({
     value: 'PUBLIC',
