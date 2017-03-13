@@ -11,7 +11,7 @@ if(process.env.NODE_ENV === 'production') {
 * Adds a comment, to a post specified by postId
 */
 export function addComment(comment, postId, user) {
-  return function(dispatch,user) {
+  return function(dispatch) {
     fetch(`${URL_PREFIX  }/posts/${String(postId)}/comments/`, {
       method: 'POST',
       headers: {
