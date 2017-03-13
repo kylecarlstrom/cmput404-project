@@ -12,11 +12,14 @@ from models import Post, Comment, FollowingRelationship
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
+# Serializes the FollowingRelationship Model
 class FollowingRelationshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowingRelationship
         fields = ('user', 'follows')
 
+# TODO: Refactor to use only one of UserSerializer or AuthorSerializer
+# Serializes the User Model
 class UserSerializer(serializers.ModelSerializer):
     # http://stackoverflow.com/a/42411533 Erik Westrup (http://stackoverflow.com/users/265508/erik-westrup) (MIT)
     def create(self, validated_data):
@@ -30,11 +33,14 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name')
 
+# TODO: Refactor to use only one of UserSerializer or AuthorSerializer
+# Serializes the User Model
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name')
 
+# Serializes the Comment Model
 # When we read we get the nested data, but we only have to passed the author_id when we write
 class CommentSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
@@ -51,6 +57,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'post': Post.objects.get(pk=self.context['post']),
         }
 
+# Serializes the Post Model
 # When we read we get the nested data, but we only have to passed the author_id when we write
 # http://www.django-rest-framework.org/api-guide/relations/#api-reference
 class PostSerializer(serializers.ModelSerializer):
