@@ -22,6 +22,12 @@ from rest_framework.permissions import AllowAny
 class PostList(generics.ListCreateAPIView):
     """
     List all posts, or create a new post.
+
+    get: 
+    returns all the posts.
+
+    post: 
+    create a new instance of post
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -36,6 +42,12 @@ class PostList(generics.ListCreateAPIView):
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Used for read-write-delete for a single post instance.
+
+    get: 
+    returns a single instance of post
+
+    delete: 
+    delete a single instance of post
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -43,6 +55,12 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 class CommentList(generics.ListCreateAPIView):
     """
     List all comments of a post, or create a new comment.
+
+    get: 
+    returns a list of all comments
+
+    post: 
+    create a new instance of comment
     """
     serializer_class = CommentSerializer
 
@@ -62,6 +80,12 @@ class CommentList(generics.ListCreateAPIView):
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Used for read-write-delete for a single comment instance.
+
+    get:
+    Returns a single instance of a comment
+
+    delete:
+    removes a single instance of a comment
     """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -69,6 +93,12 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
 class AuthorList(generics.ListCreateAPIView):
     """
     List all authors, or create a new author.
+
+    get:
+    Returns a list of all authors
+
+    post:
+    Create a new instance of an Author
     """
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
@@ -76,6 +106,12 @@ class AuthorList(generics.ListCreateAPIView):
 class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Used for read-write-delete for a single Author instance.
+
+    get: 
+    Return the details of a single instance of author
+
+    delete:
+    Removes a single instance of Author
     """
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
@@ -83,6 +119,9 @@ class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
 class CurrentFriendsList(generics.ListCreateAPIView):
     """
     List all friends of current author
+
+    get: 
+    Return a list of all the posts the current instance of author is friends with
     """
     serializer_class = AuthorSerializer
 
@@ -102,6 +141,12 @@ class CurrentFriendsList(generics.ListCreateAPIView):
 class FriendsList(generics.ListCreateAPIView):
     """
     list all following relationships, or create one
+
+    get:
+    Return a list of all the following relationships
+
+    post:
+    Create a single instance of following realationship
     """
     queryset = FollowingRelationship.objects.all()
     serializer_class = FollowingRelationshipSerializer
@@ -109,6 +154,9 @@ class FriendsList(generics.ListCreateAPIView):
 class CurrentFollowingList(generics.ListCreateAPIView):
     """
     list all people the current user follows
+
+    get:
+    Returns a list of all authors the current author is following but not firends with
     """
     serializer_class = AuthorSerializer
     def get_queryset(self):
@@ -130,6 +178,9 @@ class CurrentFollowingList(generics.ListCreateAPIView):
         return authors
 
 class AllPostsAvailableToCurrentUser(generics.ListAPIView):
+    """
+    Returns a list of all posts that is visiable to current author
+    """
     serializer_class = PostSerializer
 
     def get_queryset(self):
