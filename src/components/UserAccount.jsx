@@ -85,7 +85,7 @@ class UserAccount extends Component {
           </form>
         </Panel>
         <a className="admin-login" 
-        href="/admin">Admin Log-in</a>
+        href="/admin">Admin Login</a>
       </div>
     );
   }

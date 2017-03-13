@@ -119,11 +119,12 @@ class CreatePost extends Component {
     const options = [
       ...staticOptions,
       ...this.props.users.map(user => ({
-        label: user.name,
+        label: user.username,
         value: PERMISSIONS.USER.value,
         user: user.id
       }))
     ];
+    console.log(options);
     return (
       <div className='create-post'>
         <FormControl

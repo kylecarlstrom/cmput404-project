@@ -20,8 +20,7 @@ class Container extends Component {
         <Col md={9}>
           <CreatePost
             addPost={this.props.addPost}
-            users={[]}
-
+            users={this.props.users}
           />
            <PostList
             posts={this.props.posts}
