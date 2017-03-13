@@ -12,9 +12,6 @@ class App extends Component {
   }
 
   render() {
-
-
-
     if (this.props.loggedIn){
       return (
         <Container
@@ -57,7 +54,7 @@ App.propTypes = {
   loggedInFail: PropTypes.bool,
   posts: PropTypes.array.isRequired,
   switchTabs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   users: PropTypes.array.isRequired
 };
 
@@ -100,17 +97,14 @@ export default connect(
       switchTabs: function(tab) {
         dispatch(actions.switchTabs(tab));
       },
-
       getUsers: function() {
         dispatch(actions.getUsers(user));
       },
       changeFollowStatus: function(follow, userToFollow) {
         dispatch(actions.changeFollowStatus(follow, user, userToFollow));
       },
-
       deletePost: function(post) {
         dispatch(actions.deletePost(post,user));
-
       }
     };
   })(App);

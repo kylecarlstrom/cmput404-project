@@ -51,9 +51,6 @@ export function addComment(comment, postId, user) {
 export function addPost(post, user) {
 
   return function(dispatch) {
-
-   
-
     fetch(`${URL_PREFIX  }/posts/`, {
       method: 'POST',
       headers: {
@@ -69,7 +66,7 @@ export function addPost(post, user) {
         author: user.id,
         comments: post.comments,
         visibility:post.permission,
-        visibleTo: []
+        visibleTo: post.user_with_permission ? [post.user_with_permission] : []
       }),
     })
     .then(res => res.json())
