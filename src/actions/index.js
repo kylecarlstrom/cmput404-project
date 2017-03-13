@@ -98,7 +98,7 @@ export function loadPosts(user) {
     return fetch(URL_PREFIX + "/authors/posts/",{
       method: 'GET',
       headers: {
-        // http://stackoverflow.com/questions/30203044/using-an-authorization-header-with-fetch-in-react-native
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
         'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
         'Content-Type': 'application/x-www-form-urlencoded'
       }

@@ -77,8 +77,7 @@ es6: http://es6-features.org/
 npm version: '3.10.8'  
 react-markdown : http://rexxars.github.io/react-markdown/
   
-Reducer update item in an array: http://redux.js.org/docs/recipes/reducers/ImmutableUpdatePatterns.html#updating-an-item-in-an-array  
-
+- Reducer update item in an array: http://redux.js.org/docs/recipes/reducers/ImmutableUpdatePatterns.html#updating-an-item-in-an-array  
 - [Django Serialization](https://docs.djangoproject.com/en/1.10/topics/serialization/), accessed on March 9, 2017
 - [Django Model field reference](https://docs.djangoproject.com/en/1.10/ref/models/fields/), accessed on March 9, 2017
 - [Django Nested Relations] (http://www.django-rest-framework.org/api-guide/relations/), accessed on March 9, 2017
@@ -88,7 +87,18 @@ Reducer update item in an array: http://redux.js.org/docs/recipes/reducers/Immut
 - https://docs.djangoproject.com/en/1.10/ref/models/fields/#django.db.models.ForeignKey.on_delete (accessed on March 9, 2017)
 - Some code in server/quickstart/models.py is based on code written by http://stackoverflow.com/a/13496120 user1839132 (http://stackoverflow.com/users/1839132/user1839132) and modified by Kyle Carlstrom (CC-BY-SA 3.0)
 - Some code in server/quickstart/views.py is based on code written by [Peter DeGlopper](http://stackoverflow.com/users/2337736/peter-deglopper) at [StackOverflow](http://stackoverflow.com/questions/20135343/django-unique-filtering) and modified by Conner Dunn (CC-BY-SA 3.0) as it was posted before Feb 1, 2016.
-
+- server/quickstart/views.py http://stackoverflow.com/questions/27085219/how-can-i-disable-authentication-in-django-rest-framework#comment63774493_27086121 Oliver Ford (http://stackoverflow.com/users/1446048/oliver-ford) (MIT)
+- server/quickstart/views.py Idea for login came from: https://richardtier.com/2014/02/25/django-rest-framework-user-endpoint/ (Richard Tier)
+- server/quickstart/views.py Some code written by andi (http://stackoverflow.com/users/953553/andi) http://stackoverflow.com/a/34084329, modified by Kyle Carlstrom (CC-BY-SA 3.0)
+- server/quickstart/views.py http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
+- server/quickstart/views.py http://www.django-rest-framework.org/api-guide/filtering/#filtering-against-the-current-user
+- server/quickstart/serializers.py http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
+- server/quickstart/serializers.py http://stackoverflow.com/a/42411533 Erik Westrup (http://stackoverflow.com/users/265508/erik-westrup) (MIT)
+- server/quickstart/models.py Idea for friendship model http://stackoverflow.com/a/13496120 by user1839132 (http://stackoverflow.com/users/1839132/user1839132), modified by Kyle Carlstrom (CC-BY-SA 3.0)
+- server/settings.py http://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
+- server/settings.py http://www.django-rest-framework.org/api-guide/authentication/#setting-the-authentication-scheme
+- src/actions/index.js Some code written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
+- src/actions/index.js https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 - Used DRF Docs for documentaions on the Django Rest Framework.  http://drfdocs.com/
 
 
