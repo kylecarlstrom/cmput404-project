@@ -140,7 +140,13 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
         friendPosts = self.get_queryset_friends(currentUser)
         serverOnlyPosts = Post.objects.all().filter(visibility="SERVERONLY") # TODO: check that user is on our server
         visibleToPosts = self.get_queryset_visible_to(currentUser)
-        return publicPosts | currentUserPosts | friendPosts | serverOnlyPosts | friendOfAFriendPosts | visibleToPosts
+        intersection = publicPosts | currentUserPosts | friendPosts | serverOnlyPosts | friendOfAFriendPosts | visibleToPosts
+
+        # stackoverflow (http://stackoverflow.com/questions/20135343/django-unique-filtering)
+        # from user Peter DeGlopper (http://stackoverflow.com/users/2337736/peter-deglopper)
+        # accessed on Mar 12, 2017
+        return intersection.distinct()  # I don't want to return more than on of the same post
+        # end of code from Peter DeGlopper
 
     def get_queryset_visible_to(self, currentUser):
         return Post.objects.all().filter(visibility="PRIVATE", visibleTo=currentUser)
