@@ -27,6 +27,8 @@ class App extends Component {
             posts={this.props.posts}
             addComment={this.props.addComment}
             loadPosts={this.props.loadPosts}
+            user = {this.props.user}
+            deletePost = {this.props.deletePost}
           />
         </Col>
       );
@@ -74,7 +76,8 @@ App.propTypes = {
   loadPosts: PropTypes.func.isRequired,
   loggedIn: PropTypes.bool.isRequired,
   posts: PropTypes.array.isRequired,
-  switchTabs: PropTypes.func.isRequired
+  switchTabs: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired
 };
 
 // TODO: Move this into seperate file as container
@@ -112,6 +115,9 @@ export default connect(
       },
       switchTabs: function(tab) {
         dispatch(actions.switchTabs(tab));
+      },
+      deletePost: function(post) {
+        dispatch(actions.deletePost(post,user));
       }
     };
   })(App);

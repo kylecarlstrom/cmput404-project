@@ -14,6 +14,8 @@ class Post extends Component {
     this.handleAddComment = this.handleAddComment.bind(this);
     this.handleChangeComment = this.handleChangeComment.bind(this);
     this.textTypehandler = this.textTypehandler.bind(this);
+    this.deleteButtonHandler = this.deleteButtonHandler.bind(this);
+    this.handleDeletePost = this.handleDeletePost.bind(this);
   }
 
   handleAddComment() {
@@ -47,6 +49,19 @@ class Post extends Component {
       );
     }
   }
+  handleDeletePost(){
+    const post = {
+      id : this.props.id,
+      author : this.props.author
+    };
+    this.props.deletePost(post);
+  }
+
+  deleteButtonHandler(){
+    if (this.props.user.username == this. props.author.username){
+      return <button onClick = {this.handleDeletePost} >delete </button>
+    }
+  }
 
   render() {
     return (
@@ -62,6 +77,7 @@ class Post extends Component {
             <div className='post-body'>
               {this.props.description}
             </div>
+            {this.deleteButtonHandler()}
 
           </div>
           <div className='post-footer'>
@@ -86,13 +102,15 @@ class Post extends Component {
 
 Post.propTypes = {
   addComment: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
   author: PropTypes.object.isRequired,
   comments: PropTypes.array,   
   content: PropTypes.string.isRequired,
   contentType: PropTypes.string.isRequired,  
   description: PropTypes.string,
   id: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 export default Post;

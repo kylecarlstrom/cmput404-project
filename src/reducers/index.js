@@ -23,6 +23,14 @@ export function posts(state=[], action) {
     ];
   case types.FINISH_LOADING_POSTS:
     return action.posts;
+
+  case types.DELETE_POST:
+      var temp = state.filter(function rm(value){
+          return value.id!= action.post.id;
+        }
+      );
+      return temp;
+
   default:
     return state;
   }
