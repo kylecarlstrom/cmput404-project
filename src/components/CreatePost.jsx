@@ -124,7 +124,6 @@ class CreatePost extends Component {
         user: user.id
       }))
     ];
-    console.log(options);
     return (
       <div className='create-post'>
         <FormControl

@@ -8,8 +8,8 @@ import FriendList from '../../src/components/FriendList';
 describe('<FriendList>', function () {
   const store={};
   const props = {
-    friendRequests: [],
-    friends: []
+    changeFollowStatus: function () {},
+    users: []
   };
   it('Should render', () => {
     const wrapper = shallow(<FriendList {...props}/>);

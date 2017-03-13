@@ -25,11 +25,11 @@ export function posts(state=[], action) {
     return action.posts;
 
   case types.DELETE_POST:
-      var temp = state.filter(function rm(value){
-          return value.id!= action.post.id;
-        }
+    const temp = state.filter(function rm(value){
+      return value.id!= action.post.id;
+    }
       );
-      return temp;
+    return temp;
 
   default:
     return state;
@@ -47,7 +47,7 @@ export function users(state=[], action){
   }
 }
 
-function app(state={loggedIn: false, activeTab: 'stream'}, action) {
+export function app(state={loggedIn: false, activeTab: 'stream'}, action) {
   switch (action.type) {
   case types.LOGGED_IN:
     return {

@@ -8,14 +8,15 @@ import Post from '../../src/components/Post';
 describe('<Post>', function () {
   const store={};
   const props = {
-    author: {
-      displayname: "Aaa"
-    },
+    addComment: function () {},
+    author: { displayname: "Aaa" },
+    comments: [],
+    content: "",
+    contentType: "",
+    deletePost: function() {},
     id: 1,
     title: "Aaa",
-    comments: [],
-    addComment: function () {},
-    content: ""
+    user: {}
   };
   it('Should render', () => {
     const wrapper = shallow(<Post {...props}/>);

@@ -7,7 +7,10 @@ import UserAccount from '../../src/components/UserAccount';
 
 describe('<UserAccount>', function () {
   const store={};
-  const props = {};
+  const props = {
+    attemptLogin: function() {},
+    attemptRegister: function() {}
+  };
   it('Should render', () => {
     const wrapper = shallow(<UserAccount {...props}/>);
     assert.equal(wrapper.find('.wrapper').length, 1);

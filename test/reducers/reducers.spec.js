@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
 import * as types from '../../src/types';
-import { posts, friends } from '../../src/reducers/index';
+import { posts, users, app } from '../../src/reducers/index';
 
 const baseState = {
   "posts": [],
@@ -32,17 +32,16 @@ describe('posts reducer', function () {
     it('should add post', () => {
       const action = {
         type: types.ADD_POST,
-        postId: "pid",
         post: { id: "pid", payload: "payload" }
       };
       const state = {};
       assert.deepEqual(
-        posts(state, action), {
-          "pid": {
+        posts(state, action), [
+          {
             id: "pid",
             payload: "payload"
           }
-        }
+        ]
       );
     });
   });
@@ -73,13 +72,88 @@ describe('posts reducer', function () {
 });
 
 
-describe('friends reducer', function () {
+describe('users reducer', function () {
+  describe('loaded users', () => {
+    it('should load users', () => {
+      const action = { 
+        type: types.LOADED_USERS,  
+        users: [{ a:"aaa" }]
+      };
+      const state = [];
+      assert.deepEqual(
+        users(state, action), [ { a: "aaa"} ]
+      );
+    });
+  });
+
   describe('default behavior', () => {
     it('should return state', () => {
       const action = {};
       const state = {};
       assert.deepEqual(
-        friends(state, action), {
+        users(state, action), {
+        }
+      );
+    });
+  });
+});
+
+
+describe('app reducer', function () {
+  describe('logged in', () => {
+    it('should log in', () => {
+      const action = { 
+        type: types.LOGGED_IN,  
+        user: { a:"aaa" }
+      };
+      const state = {};
+      assert.deepEqual(
+        app(state, action), { 
+          user: { a: "aaa"},
+          loggedIn: true
+        }
+      );
+    });
+  });
+
+  describe('login fail', () => {
+    it('should login fail', () => {
+      const action = { 
+        type: types.LOGGED_IN_FAILED,  
+        user: { a:"aaa" }
+      };
+      const state = {};
+      assert.deepEqual(
+        app(state, action), { 
+          user: { a: "aaa"},
+          loggedIn: false,
+          loggedInFail: true
+        }
+      );
+    });
+  });
+
+  describe('switch tabs', () => {
+    it('should switch tabs', () => {
+      const action = { 
+        type: types.SWITCH_TABS,  
+        tab: { a:"aaa" }
+      };
+      const state = {};
+      assert.deepEqual(
+        app(state, action), { 
+          activeTab: { a: "aaa"}
+        }
+      );
+    });
+  });
+
+  describe('default behavior', () => {
+    it('should return state', () => {
+      const action = {};
+      const state = {};
+      assert.deepEqual(
+        app(state, action), {
         }
       );
     });

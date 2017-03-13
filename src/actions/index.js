@@ -1,7 +1,7 @@
 import * as types from '../types';
 import uuid from 'uuid/v1';
 
-let URL_PREFIX = 'http://' + window.location.hostname + ':8000';
+let URL_PREFIX = `http://${  window.location.hostname  }:8000`;
 /*eslint-disable */
 if(process.env.NODE_ENV === 'production') {
   URL_PREFIX = 'https://' + window.location.hostname;
@@ -23,7 +23,7 @@ export function addComment(comment, postId, user) {
   // };
   return function(dispatch,user) {
    
-    fetch(URL_PREFIX + `/posts/${String(postId)}/comments/`, {
+    fetch(`${URL_PREFIX  }/posts/${String(postId)}/comments/`, {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
@@ -54,7 +54,7 @@ export function addPost(post, user) {
 
    
 
-    fetch(URL_PREFIX + '/posts/', {
+    fetch(`${URL_PREFIX  }/posts/`, {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
@@ -95,11 +95,11 @@ function finishLoadingPosts(result) {
 export function loadPosts(user) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch(URL_PREFIX + "/authors/posts/",{
+    return fetch(`${URL_PREFIX  }/authors/posts/`,{
       method: 'GET',
       headers: {
         // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
-        'Authorization': 'Basic '+btoa(user.username+":"+user.password), 
+        'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
         'Content-Type': 'application/x-www-form-urlencoded'
       }
 
@@ -128,10 +128,10 @@ function logInFail(user) {
 export function attempLogin(username, password) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch(URL_PREFIX + '/login/', {
+    return fetch(`${URL_PREFIX  }/login/`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Basic '+btoa(username + ":" + password)
+        'Authorization': `Basic ${btoa(`${username  }:${  password}`)}`
       }
     }).then(res => {
       if (!res.ok) {
@@ -159,10 +159,10 @@ export function attempLogin(username, password) {
 export function attemptRegister(username, password) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch(URL_PREFIX + '/register/', {
+    return fetch(`${URL_PREFIX  }/register/`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Basic '+btoa(username + ":" + password),
+        'Authorization': `Basic ${btoa(`${username  }:${  password}`)}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -201,22 +201,22 @@ export function getUsers(user) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     return Promise.all([
-      fetch(URL_PREFIX + "/authors/" + user.id + "/friends/", {
+      fetch(`${URL_PREFIX  }/authors/${  user.id  }/friends/`, {
         method: 'GET',
         headers: {
-          'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
+          'Authorization': `Basic ${btoa(`${user.username  }:${  user.password}`)}`
         }
       }),
-      fetch(URL_PREFIX + "/authors/", {
+      fetch(`${URL_PREFIX  }/authors/`, {
         method: 'GET',
         headers: {
-          'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
+          'Authorization': `Basic ${btoa(`${user.username  }:${  user.password}`)}`
         }
       }),
-      fetch(URL_PREFIX + "/authors/" + user.id + "/following/", {
+      fetch(`${URL_PREFIX  }/authors/${  user.id  }/following/`, {
         method: 'GET',
         headers: {
-          'Authorization': 'Basic '+btoa(user.username + ":" + user.password)
+          'Authorization': `Basic ${btoa(`${user.username  }:${  user.password}`)}`
         }
       })
     ])
@@ -261,10 +261,10 @@ export function changeFollowStatus(follow, currentUser, userToFollow) {
       return; // Uncomment when delete works
     }
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch(URL_PREFIX + '/friendrequest/', {
+    return fetch(`${URL_PREFIX  }/friendrequest/`, {
       method: follow ? 'POST' : 'DELETE',
       headers: {
-        'Authorization': 'Basic '+btoa(currentUser.username + ":" + currentUser.password),
+        'Authorization': `Basic ${btoa(`${currentUser.username  }:${  currentUser.password}`)}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -292,7 +292,7 @@ export function deletePost(post,user){
   return function(dispatch) {
 
    
-    fetch(URL_PREFIX+'/posts/'+String(post.id)+'/', {
+    fetch(`${URL_PREFIX}/posts/${String(post.id)}/`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 

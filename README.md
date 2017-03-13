@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/TianZhiWang/cmput404-project.svg?branch=master)](https://travis-ci.org/TianZhiWang/cmput404-project)  
 
 #Live Preview
-[https://coolbears.heroku.com/](https://coolbears.heroku.com/)
+[https://coolbears.herokuapp.com/](https://coolbears.herokuapp.com/)
 
 # Installation of Client
 npm install  

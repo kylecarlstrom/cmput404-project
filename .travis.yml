@@ -1,6 +1,20 @@
+sudo: required
 language: node_js
 node_js:
   - "node"
+python:
+  - "2.7"
+before_install:
+  - sudo apt-get -y install python-pip python-dev
 before_script:
   - npm install -g mocha
+  - python manage.py makemigrations
+  - python manage.py makemigrations quickstart
+  - python manage.py migrate
+install:
+  - npm install
+  - sudo pip install -r requirements.txt
+
 script: npm test
+env:
+  - NODE_ENV=development

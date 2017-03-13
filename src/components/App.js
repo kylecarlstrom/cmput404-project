@@ -50,14 +50,15 @@ App.propTypes = {
   attempLogin: PropTypes.func.isRequired,
   attemptRegister: PropTypes.func.isRequired,
   changeFollowStatus: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,  
   getUsers: PropTypes.func.isRequired,
   loadPosts: PropTypes.func.isRequired,
   loggedIn: PropTypes.bool.isRequired,
   loggedInFail: PropTypes.bool,
   posts: PropTypes.array.isRequired,
   switchTabs: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
-  deletePost: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired,
+  users: PropTypes.array.isRequired
 };
 
 // TODO: Move this into seperate file as container

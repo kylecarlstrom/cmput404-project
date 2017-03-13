@@ -8,7 +8,10 @@ import FriendListItem from '../../src/components/FriendListItem';
 describe('<FriendListItem>', function () {
   const store={};
   const props = {
-    isFollower: true,
+    changeFollowStatus: function () {},
+    id: 1,
+    isFollowing: true,
+    isFriend: true,
     username: ""
   };
   it('Should render', () => {

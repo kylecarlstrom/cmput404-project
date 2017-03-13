@@ -61,13 +61,13 @@ Container.propTypes = {
   addComment: PropTypes.func.isRequired,
   addPost: PropTypes.func.isRequired,
   changeFollowStatus: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   loadPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
   switchTabs: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
-  deletePost: PropTypes.func.isRequired
+  users: PropTypes.array.isRequired
 };
 
 export default Container;

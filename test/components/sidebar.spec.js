@@ -8,7 +8,8 @@ import Sidebar from '../../src/components/Sidebar';
 describe('<Sidebar>', function () {
   const store={};
   const props = {
-    updateContent: function() {}
+    activeTab: "",
+    switchTabs: function() {}
   };
   it('Should render', () => {
     const wrapper = shallow(<Sidebar {...props}/>);

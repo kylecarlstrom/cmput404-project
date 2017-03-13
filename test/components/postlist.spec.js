@@ -9,8 +9,10 @@ describe('<PostList>', function () {
   const store={};
   const props = {
     addComment: function() {},
+    deletePost: function() {},
     loadPosts: function() {},
-    posts: []
+    posts: [],
+    user: {}
   };
   it('Should render', () => {
     const wrapper = shallow(<PostList {...props}/>);

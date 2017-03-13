@@ -59,7 +59,8 @@ class Post extends Component {
 
   deleteButtonHandler(){
     if (this.props.user.username == this. props.author.username){
-      return <Button bsStyle="danger" onClick = {this.handleDeletePost} >delete </Button>
+      return <Button bsStyle="danger" 
+      onClick = {this.handleDeletePost} >delete </Button>;
     }
   }
 
@@ -102,11 +103,11 @@ class Post extends Component {
 
 Post.propTypes = {
   addComment: PropTypes.func.isRequired,
-  deletePost: PropTypes.func.isRequired,
   author: PropTypes.object.isRequired,
-  comments: PropTypes.array,   
+  comments: PropTypes.array,
   content: PropTypes.string.isRequired,
-  contentType: PropTypes.string.isRequired,  
+  contentType: PropTypes.string.isRequired,
+  deletePost: PropTypes.func.isRequired,
   description: PropTypes.string,
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
