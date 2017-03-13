@@ -87,6 +87,7 @@ Reducer update item in an array: http://redux.js.org/docs/recipes/reducers/Immut
 - Some code in server/quickstart/serializers.py was written by http://stackoverflow.com/a/33048798 joslarson (http://stackoverflow.com/users/3097518/joslarson) on StackOverflow, modified by Kyle Carlstrom (CC-BY-SA 3.0)
 - https://docs.djangoproject.com/en/1.10/ref/models/fields/#django.db.models.ForeignKey.on_delete (accessed on March 9, 2017)
 - Some code in server/quickstart/models.py is based on code written by http://stackoverflow.com/a/13496120 user1839132 (http://stackoverflow.com/users/1839132/user1839132) and modified by Kyle Carlstrom (CC-BY-SA 3.0)
+- Some code in server/quickstart/views.py is based on code written by [Peter DeGlopper](http://stackoverflow.com/users/2337736/peter-deglopper) at [StackOverflow](http://stackoverflow.com/questions/20135343/django-unique-filtering) and modified by Conner Dunn (CC-BY-SA 3.0) as it was posted before Feb 1, 2016.
 
 - Used DRF Docs for documentaions on the Django Rest Framework.  http://drfdocs.com/
 

@@ -49,7 +49,7 @@ class CommentList(generics.ListCreateAPIView):
     def get_queryset(self):
         post = self.kwargs['post']
         return Comment.objects.filter(post=post)
-    
+
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
 
     # Written by andi (http://stackoverflow.com/users/953553/andi) http://stackoverflow.com/a/34084329, modified by Kyle Carlstrom
@@ -142,6 +142,7 @@ class AllPostsAvailableToCurrentUser(generics.ListAPIView):
         visibleToPosts = self.get_queryset_visible_to(currentUser)
         intersection = publicPosts | currentUserPosts | friendPosts | serverOnlyPosts | friendOfAFriendPosts | visibleToPosts
 
+        # (CC-BY-SA 3.0) as it was posted before Feb 1, 2016
         # stackoverflow (http://stackoverflow.com/questions/20135343/django-unique-filtering)
         # from user Peter DeGlopper (http://stackoverflow.com/users/2337736/peter-deglopper)
         # accessed on Mar 12, 2017
