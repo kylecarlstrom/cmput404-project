@@ -21,7 +21,7 @@ export function addComment(comment, postId, user) {
   //     author: user
   //   }
   // };
-  return function(dispatch) {
+  return function(dispatch,user) {
    
     fetch(URL_PREFIX + `/posts/${String(postId)}/comments/`, {
       method: 'POST',
@@ -53,6 +53,7 @@ export function addPost(post, user) {
   return function(dispatch) {
 
    
+
     fetch(URL_PREFIX + '/posts/', {
       method: 'POST',
       headers: {
@@ -285,3 +286,28 @@ export function changeFollowStatus(follow, currentUser, userToFollow) {
     });
   };
 }
+
+
+export function deletePost(post,user){
+  return function(dispatch) {
+
+   
+    fetch(URL_PREFIX+'/posts/'+String(post.id)+'/', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+    })
+    // .then(res => res.json())
+    .then((res) => {
+      dispatch({type:types.DELETE_POST,post:post});
+     // location.reload();
+    })
+    .catch((err) => {
+
+    });
+  };
+}
+
