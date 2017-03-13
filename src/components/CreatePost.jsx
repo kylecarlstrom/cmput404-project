@@ -5,6 +5,9 @@ import Select from 'react-select';
 import Markdown from 'react-markdown';
 import 'react-select/dist/react-select.css';
 
+/*
+* Component for creating a new post, has multiple input fields to specify options
+*/
 class CreatePost extends Component {
   constructor(props) {
     super(props);

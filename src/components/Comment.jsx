@@ -1,5 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
+/*
+* Renders a basic comment component with comment text and author
+*/
 class Comment extends Component {
   render() {
     return (

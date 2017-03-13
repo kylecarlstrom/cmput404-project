@@ -2,6 +2,9 @@ import React, {Component, PropTypes} from 'react';
 import FriendListItem from './FriendListItem';
 import {ListGroup} from 'react-bootstrap';
 
+/*
+* Renders a list of friends in three sections: Friends, Following, and Everyone Else
+*/
 class FriendList extends Component {
   createUserList(people) {
     return (

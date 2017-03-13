@@ -7,20 +7,10 @@ if(process.env.NODE_ENV === 'production') {
   URL_PREFIX = 'https://' + window.location.hostname;
 }
 /*eslint-enable */
-
+/*
+* Adds a comment, to a post specified by postId
+*/
 export function addComment(comment, postId, user) {
- //call api
- 
-
-  // return {
-  //   type: types.ADD_COMMENT,
-  //   postId,
-  //   comment: {
-  //     id: uuid(),
-  //     comment,
-  //     author: user
-  //   }
-  // };
   return function(dispatch,user) {
    
     fetch(`${URL_PREFIX  }/posts/${String(postId)}/comments/`, {
@@ -47,16 +37,15 @@ export function addComment(comment, postId, user) {
     });
   };
 }
-
+/*
+* Adds a post by a user then returns an action to update the state
+*/
 export function addPost(post, user) {
-
   return function(dispatch) {
-
-   
-
     fetch(`${URL_PREFIX  }/posts/`, {
       method: 'POST',
       headers: {
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -83,8 +72,9 @@ export function addPost(post, user) {
   };
 }
 
-
-
+/*
+* Returns an action with the post results (or [])
+*/
 function finishLoadingPosts(result) {
   return {
     type: types.FINISH_LOADING_POSTS,
@@ -92,13 +82,15 @@ function finishLoadingPosts(result) {
   };
 }
 
+/*
+* Loads all posts visible to the current user
+*/
 export function loadPosts(user) {
   return function(dispatch) {
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    return fetch(`${URL_PREFIX  }/authors/posts/`,{
+    return fetch(`${URL_PREFIX}/authors/posts/`,{
       method: 'GET',
       headers: {
-        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -111,6 +103,9 @@ export function loadPosts(user) {
   };
 }
 
+/*
+* Action that updates the state to log the user in
+*/
 function logIn(user) {
   return {
     type: types.LOGGED_IN,
@@ -118,6 +113,9 @@ function logIn(user) {
   };
 }
 
+/*
+* Action that updates the state to say the log in has failed
+*/
 function logInFail(user) {
   return {
     type: types.LOGGED_IN_FAILED,
@@ -125,13 +123,16 @@ function logInFail(user) {
   };
 }
 
+/*
+* Attempts to log into the web service using the username and password, will return an action that specifies it failed or suceeded
+*/
 export function attempLogin(username, password) {
   return function(dispatch) {
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     return fetch(`${URL_PREFIX  }/login/`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${btoa(`${username  }:${  password}`)}`
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
+        'Authorization': `Basic ${btoa(`${username}:${password}`)}`
       }
     }).then(res => {
       if (!res.ok) {
@@ -156,13 +157,17 @@ export function attempLogin(username, password) {
   };
 }
 
+/*
+* Attempts to register the user to the service using the username and password
+* can fail if the username is not unique
+*/
 export function attemptRegister(username, password) {
   return function(dispatch) {
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     return fetch(`${URL_PREFIX  }/register/`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${btoa(`${username  }:${  password}`)}`,
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
+        'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -182,7 +187,9 @@ export function attemptRegister(username, password) {
   };
 }
 
-
+/*
+* Switch tabs to the input tab
+*/
 export function switchTabs(tab) {
   return {
     type: types.SWITCH_TABS,
@@ -190,6 +197,9 @@ export function switchTabs(tab) {
   };
 }
 
+/*
+* Returns an action to update the user with all current users
+*/
 export function finishedGettingUsers(users) {
   return {
     type: types.LOADED_USERS,
@@ -197,6 +207,9 @@ export function finishedGettingUsers(users) {
   };
 }
 
+/*
+* Gets all of the current users, friends, and following and joins them into one with an isFriend and isFollowing
+*/
 export function getUsers(user) {
   return function(dispatch) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -204,18 +217,21 @@ export function getUsers(user) {
       fetch(`${URL_PREFIX  }/authors/${  user.id  }/friends/`, {
         method: 'GET',
         headers: {
+          // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
           'Authorization': `Basic ${btoa(`${user.username  }:${  user.password}`)}`
         }
       }),
       fetch(`${URL_PREFIX  }/authors/`, {
         method: 'GET',
         headers: {
+          // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
           'Authorization': `Basic ${btoa(`${user.username  }:${  user.password}`)}`
         }
       }),
       fetch(`${URL_PREFIX  }/authors/${  user.id  }/following/`, {
         method: 'GET',
         headers: {
+          // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
           'Authorization': `Basic ${btoa(`${user.username  }:${  user.password}`)}`
         }
       })
@@ -247,6 +263,9 @@ export function getUsers(user) {
   };
 }
 
+/*
+* Specifies the current user is following 'user to follow'
+*/
 function addFollower(currentUser, userToFollow) {
   return {
     type: types.FOLLOW_USER,
@@ -255,6 +274,9 @@ function addFollower(currentUser, userToFollow) {
   };
 }
 
+/*
+* Makes a request to follow the user specified by userToFollow
+*/
 export function changeFollowStatus(follow, currentUser, userToFollow) {
   return function(dispatch) {
     if (!follow) {
@@ -264,7 +286,8 @@ export function changeFollowStatus(follow, currentUser, userToFollow) {
     return fetch(`${URL_PREFIX  }/friendrequest/`, {
       method: follow ? 'POST' : 'DELETE',
       headers: {
-        'Authorization': `Basic ${btoa(`${currentUser.username  }:${  currentUser.password}`)}`,
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
+        'Authorization': `Basic ${btoa(`${currentUser.username}:${currentUser.password}`)}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -287,14 +310,15 @@ export function changeFollowStatus(follow, currentUser, userToFollow) {
   };
 }
 
-
+/*
+* Deletes a post specified by post
+*/
 export function deletePost(post,user){
   return function(dispatch) {
-
-   
     fetch(`${URL_PREFIX}/posts/${String(post.id)}/`, {
       method: 'DELETE',
       headers: {
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
         'Authorization': `Basic ${btoa(`${user.username}:${user.password}`)}`, 
         'Content-Type': 'application/json',
         'Accept': 'application/json'

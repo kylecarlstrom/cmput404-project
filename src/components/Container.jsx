@@ -5,7 +5,9 @@ import FriendList from './FriendList';
 import PostList from './PostList';
 import Sidebar from './Sidebar';
 
-
+/*
+* Container renders a siderbar and one of two components: the PostList or the FriendList
+*/
 class Container extends Component {
   constructor(props) {
     super(props);

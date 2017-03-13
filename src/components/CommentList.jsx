@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import Comment from './Comment';
 
+/*
+* Renders a list of Comment components
+*/
 class CommentList extends Component {
   render() {
 
