@@ -52,6 +52,7 @@ class CommentSerializer(serializers.ModelSerializer):
         }
 
 # When we read we get the nested data, but we only have to passed the author_id when we write
+# http://www.django-rest-framework.org/api-guide/relations/#api-reference
 class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     author = AuthorSerializer(read_only=True)

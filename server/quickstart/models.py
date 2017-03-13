@@ -26,6 +26,7 @@ class Post(models.Model):
         return self.title
 
 class Comment(models.Model):
+    # http://www.django-rest-framework.org/api-guide/relations/#api-reference
     post = models.ForeignKey(Post, related_name='comments')
     author = models.ForeignKey(User)
     comment = models.CharField(max_length=140)
