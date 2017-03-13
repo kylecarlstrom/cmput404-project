@@ -2,6 +2,9 @@ import React, {Component, PropTypes} from 'react';
 import {Panel, Button, Glyphicon} from 'react-bootstrap';
 import {ListGroupItem} from 'react-bootstrap';
 
+/*
+* Renders a user with accept or delete options contextually
+*/
 class FriendListItem extends Component {
   constructor(props) {
     super(props);

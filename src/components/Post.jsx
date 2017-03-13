@@ -3,6 +3,9 @@ import {Panel, Button, FormControl} from 'react-bootstrap';
 import CommentList from './CommentList';
 import Markdown from 'react-markdown';
 
+/*
+* Represents a post component with comments optionally
+*/
 class Post extends Component {
   constructor(props) {
     super(props);

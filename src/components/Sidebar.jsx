@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import {ListGroup, ListGroupItem, Nav, NavItem} from 'react-bootstrap';
 
+/*
+* Renders a sidebar with a couple options: Stream and Following
+*/
 class Sidebar extends Component {
   constructor(props) {
     super(props);

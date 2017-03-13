@@ -5,16 +5,15 @@ import UserAccount from './UserAccount';
 import '../../style/style.scss';
 import * as actions from '../actions';
 
-
+/*
+* The root component, renders container if logged in or the login page otherwise
+*/
 class App extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-
-
-
     if (this.props.loggedIn){
       return (
         <Container
@@ -61,7 +60,9 @@ App.propTypes = {
   users: PropTypes.array.isRequired
 };
 
-// TODO: Move this into seperate file as container
+/*
+* Connects the component to the app state, also specifies action that can be used to update the state
+*/
 export default connect(
   function(stateProps, ownProps) {
     return {
@@ -100,14 +101,12 @@ export default connect(
       switchTabs: function(tab) {
         dispatch(actions.switchTabs(tab));
       },
-
       getUsers: function() {
         dispatch(actions.getUsers(user));
       },
       changeFollowStatus: function(follow, userToFollow) {
         dispatch(actions.changeFollowStatus(follow, user, userToFollow));
       },
-
       deletePost: function(post) {
         dispatch(actions.deletePost(post,user));
 

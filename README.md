@@ -81,6 +81,7 @@ es6: http://es6-features.org/
 npm version: '3.10.8'  
 react-markdown : http://rexxars.github.io/react-markdown/
   
+- src/index.jx  https://github.com/zalmoxisus/redux-devtools-extension Mihail Diordiev (https://github.com/zalmoxisus) (MIT)
 - Reducer update item in an array: http://redux.js.org/docs/recipes/reducers/ImmutableUpdatePatterns.html#updating-an-item-in-an-array  
 - [Django Serialization](https://docs.djangoproject.com/en/1.10/topics/serialization/), accessed on March 9, 2017
 - [Django Model field reference](https://docs.djangoproject.com/en/1.10/ref/models/fields/), accessed on March 9, 2017
@@ -105,7 +106,7 @@ react-markdown : http://rexxars.github.io/react-markdown/
 - src/actions/index.js Some code written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
 - src/actions/index.js https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 - Used DRF Docs for documentaions on the Django Rest Framework.  http://drfdocs.com/
-
+- https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 
 # About this project
 This project is for CMPUT 404, see the [project description here](https://github.com/abramhindle/CMPUT404-project-socialdistribution).

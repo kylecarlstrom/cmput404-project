@@ -1,6 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import Post from './Post';
 
+/*
+* Renders a list of posts
+*/
 class PostList extends Component {
   componentDidMount() {
     this.props.loadPosts();
