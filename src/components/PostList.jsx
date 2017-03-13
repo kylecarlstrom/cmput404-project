@@ -13,6 +13,8 @@ class PostList extends Component {
             addComment={this.props.addComment}
             author={post.author}
             contentType = {post.contentType}
+            user = {this.props.user}
+            deletePost = {this.props.deletePost}
             {...post}
           />
         ))}
@@ -24,7 +26,9 @@ class PostList extends Component {
 PostList.propTypes = {
   addComment: PropTypes.func.isRequired,
   loadPosts: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 export default PostList;

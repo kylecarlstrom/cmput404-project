@@ -23,10 +23,12 @@ class Container extends Component {
             users={[]}
 
           />
-          <PostList
+           <PostList
             posts={this.props.posts}
             addComment={this.props.addComment}
             loadPosts={this.props.loadPosts}
+            user = {this.props.user}
+            deletePost = {this.props.deletePost}
           />
         </Col>
       );
@@ -64,7 +66,9 @@ Container.propTypes = {
   loadPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
   switchTabs: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired,
+  deletePost: PropTypes.func.isRequired
 };
 
 export default Container;

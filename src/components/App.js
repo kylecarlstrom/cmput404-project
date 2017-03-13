@@ -12,6 +12,9 @@ class App extends Component {
   }
 
   render() {
+
+
+
     if (this.props.loggedIn){
       return (
         <Container
@@ -24,6 +27,8 @@ class App extends Component {
           posts={this.props.posts}
           switchTabs={this.props.switchTabs}
           users={this.props.users}
+          user = {this.props.user}
+          deletePost = {this.props.deletePost}
         />
       );
     } else {
@@ -51,7 +56,8 @@ App.propTypes = {
   loggedInFail: PropTypes.bool,
   posts: PropTypes.array.isRequired,
   switchTabs: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  deletePost: PropTypes.func.isRequired
 };
 
 // TODO: Move this into seperate file as container
@@ -68,7 +74,9 @@ export default connect(
   },
   null,
   function(stateProps, dispatchProps, ownProps) {
+    const {users} = stateProps;
     const {user} = stateProps;
+
     const {dispatch} = dispatchProps;
     return {
       ...stateProps,
@@ -91,11 +99,17 @@ export default connect(
       switchTabs: function(tab) {
         dispatch(actions.switchTabs(tab));
       },
+
       getUsers: function() {
         dispatch(actions.getUsers(user));
       },
       changeFollowStatus: function(follow, userToFollow) {
         dispatch(actions.changeFollowStatus(follow, user, userToFollow));
+      },
+
+      deletePost: function(post) {
+        dispatch(actions.deletePost(post,user));
+
       }
     };
   })(App);
