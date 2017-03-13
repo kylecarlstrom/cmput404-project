@@ -12,7 +12,6 @@ if(process.env.NODE_ENV === 'production') {
 */
 export function addComment(comment, postId, user) {
   return function(dispatch,user) {
-   
     fetch(`${URL_PREFIX  }/posts/${String(postId)}/comments/`, {
       method: 'POST',
       headers: {
@@ -212,7 +211,6 @@ export function finishedGettingUsers(users) {
 */
 export function getUsers(user) {
   return function(dispatch) {
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     return Promise.all([
       fetch(`${URL_PREFIX  }/authors/${  user.id  }/friends/`, {
         method: 'GET',
@@ -282,11 +280,10 @@ export function changeFollowStatus(follow, currentUser, userToFollow) {
     if (!follow) {
       return; // Uncomment when delete works
     }
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     return fetch(`${URL_PREFIX  }/friendrequest/`, {
       method: follow ? 'POST' : 'DELETE',
       headers: {
-        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539
+        // Written by unyo (http://stackoverflow.com/users/2077884/unyo http://stackoverflow.com/a/35780539 (MIT)
         'Authorization': `Basic ${btoa(`${currentUser.username}:${currentUser.password}`)}`,
         'Content-Type': 'application/json'
       },

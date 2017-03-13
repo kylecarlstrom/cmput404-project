@@ -27,6 +27,7 @@ class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
 
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
+    # Written by andi (http://stackoverflow.com/users/953553/andi) http://stackoverflow.com/a/34084329, modified by Kyle Carlstrom
     def get_serializer_context(self):
         return {
             'author': self.request.user
