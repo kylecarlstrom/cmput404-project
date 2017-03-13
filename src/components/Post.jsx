@@ -59,7 +59,7 @@ class Post extends Component {
 
   deleteButtonHandler(){
     if (this.props.user.username == this. props.author.username){
-      return <Button onClick = {this.handleDeletePost} >delete </Button>
+      return <Button bsStyle="danger" onClick = {this.handleDeletePost} >delete </Button>
     }
   }
 
