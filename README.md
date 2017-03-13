@@ -97,6 +97,7 @@ react-markdown : http://rexxars.github.io/react-markdown/
 - server/quickstart/views.py http://www.django-rest-framework.org/api-guide/filtering/#filtering-against-the-current-user
 - server/quickstart/serializers.py http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
 - server/quickstart/serializers.py http://stackoverflow.com/a/42411533 Erik Westrup (http://stackoverflow.com/users/265508/erik-westrup) (MIT)
+- server/quickstarts/serializers.py http://stackoverflow.com/a/38606711 darkterror (http://stackoverflow.com/users/3464760/darkterror) (MIT)
 - server/quickstart/models.py Idea for friendship model http://stackoverflow.com/a/13496120 by user1839132 (http://stackoverflow.com/users/1839132/user1839132), modified by Kyle Carlstrom (CC-BY-SA 3.0)
 - server/settings.py http://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
 - server/settings.py http://www.django-rest-framework.org/api-guide/authentication/#setting-the-authentication-scheme

@@ -43,7 +43,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields=('id', 'comment', 'author')
 
     # TODO: Add proper validation in to_internal_value
-    # http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
+    # http://stackoverflow.com/a/38606711 darkterror (http://stackoverflow.com/users/3464760/darkterror) (MIT)
     def to_internal_value(self, data):
         return {
             'comment': data['comment'],
@@ -61,7 +61,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'content', 'description', 'contentType', 'author', 'comments', 'visibility', 'visibleTo')
 
     # TODO: Add proper validation in to_internal_value
-    # http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
+    # http://stackoverflow.com/a/38606711 darkterror (http://stackoverflow.com/users/3464760/darkterror) (MIT)
     def to_internal_value(self, data):
         return {
             'title': data['title'],
