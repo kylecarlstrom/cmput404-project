@@ -1,11 +1,12 @@
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.test import Client
+from server.quickstart.models import Post, Comment, FollowingRelationship
 from rest_framework import status
 from rest_framework.test import APITestCase
-from models import Post, Comment, FollowingRelationship
 
 class AccountTests(APITestCase):
+    """ This is the home of all of our tests """
 
     def setUp(self):
         """ Set up is run before each test """
@@ -17,13 +18,6 @@ class AccountTests(APITestCase):
 
         self.client.login(username='nixy', password='tester123')
         self.client.force_authenticate(user=self.authorUser)
-
-    def test_get_no_post(self):
-        """ Should return 404 because POST doesn't exist yet """
-        doesNotExistYet = "10"
-        getUrl = '/posts/' + doesNotExistYet + '/'
-        response = self.client.get(getUrl)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_root(self):
         """ Ensure we can create a new account object. """
