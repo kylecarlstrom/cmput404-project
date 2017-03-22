@@ -221,7 +221,7 @@ class AllPostsAvailableToCurrentUser(APIView,PaginationMixin):
         return Post.objects.all().filter(author__in=temp).filter(visibility="FOAF")
 
     def get_queryset_friends(self, currentUser):
-        friendsOfCurrentUser = self.get_friends_of_authorPK(currentUser.pk)
+        friendsOfCurrentUser = get_friends_of_authorPK(currentUser.pk)
 
         return Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
 
