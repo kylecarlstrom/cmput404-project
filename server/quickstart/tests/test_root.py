@@ -1,7 +1,5 @@
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.test import Client
-from server.quickstart.models import Post, Comment, FollowingRelationship
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -16,11 +14,20 @@ class RootTests(APITestCase):
         self.authorUser.set_password('tester123')
         self.authorUser.save()
 
+    def setUpLogin(self):
         self.client.login(username='nixy', password='tester123')
         self.client.force_authenticate(user=self.authorUser)
 
-    def test_get_root(self):
-        """ Ensure we can create a new account object. """
+    def test_get_no_auth(self):
+        """ Ensure we can get the homepage un-authenticated """
         url = reverse("root")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(status.is_success(response.status_code))
+
+    def test_get_auth(self):
+        """ Ensure we can get the homepage authenticated """
+        self.setUpLogin()
+        url = reverse("root")
+        response = self.client.get(url)
+        self.assertTrue(status.is_success(response.status_code))
+
