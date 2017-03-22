@@ -59,6 +59,8 @@ class Post(models.Model):
     # visibleTo will create an intermediate table to represent a ManyToMany relationship with users
     # http://stackoverflow.com/a/2529875 Ludwik Trammer (http://stackoverflow.com/users/262618/ludwik-trammer) (MIT)
     visibleTo = models.ManyToManyField(User, related_name="visibleTo", blank=True)
+    #save image to strftime formmating date
+    image = models.FileField(upload_to='images', blank=True, null=True)
 
     def __unicode__(self):
         return self.title
