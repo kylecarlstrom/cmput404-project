@@ -31,7 +31,13 @@ from rest_framework import serializers
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
+from pagination import PostsPagination, PaginationMixin
 
+def get_friends_of_authorPK(authorPK):
+    following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
+    following_pks = [author['follows'] for author in following]
+    followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
+    return followed.filter(user__in=following_pks)
 
 class PostList(generics.ListCreateAPIView):
     """
@@ -45,6 +51,7 @@ class PostList(generics.ListCreateAPIView):
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    pagination_class = PostsPagination
 
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
     # Written by andi (http://stackoverflow.com/users/953553/andi) http://stackoverflow.com/a/34084329, modified by Kyle Carlstrom
@@ -111,10 +118,43 @@ class AuthorList(APIView):
 
         formattedUsers = []
         for user in users:
-            author = {'displayName': user.displayName, 'id': user.id, 'isFollowing': (user in followingUsers), 'isFollowed': (user in followedUsers)}
+            author = AuthorSerializer(user).data
+            author['isFollowing'] = (user in followingUsers)
+            author['isFollowed'] = (user in followedUsers)
             formattedUsers.append(author)
         
         return Response(formattedUsers)
+
+class AuthorDetail(APIView):
+    """
+    Get Author by Id
+
+    get:
+    Returns an author
+    """
+    def get(self, request, author_id, format=None):
+        author = get_object_or_404(Author, pk=author_id)
+        serialized_data = AuthorSerializer(author).data
+        return Response(data=serialized_data, status=200)
+
+class FriendsList(APIView):
+    """
+    List all friends of author
+
+    get:
+    Returns a list of all authors that are friends
+    """
+    def get(self, request, author_id, format=None):
+        author = get_object_or_404(Author, pk=author_id)
+        following = FollowingRelationship.objects.filter(user=author_id).values('follows') # everyone currentUser follows
+        following_pks = [author['follows'] for author in following]
+        followed = FollowingRelationship.objects.filter(follows=author_id).values('user')  # everyone that follows currentUser
+        friends = followed.filter(user__in=following_pks)
+
+        users = Author.objects.filter(id__in=friends)
+        formatedUsers = AuthorSerializer(users,many=True).data
+        return Response({ "query": "friends","authors":formatedUsers})
+
 
 # TODO: How to add remote authors? Also how to link them?
 class FollowingRelationshipList(APIView):
@@ -134,15 +174,26 @@ class FollowingRelationshipList(APIView):
         FollowingRelationship.objects.create(user=author, follows=friend)
         return Response(status=201)
 
-class AllPostsAvailableToCurrentUser(APIView):
+
+
+class AllPostsAvailableToCurrentUser(APIView,PaginationMixin):
     """
     Returns a list of all posts that is visiable to current author
     """
+    pagination_class = PostsPagination
+    
+    # http://stackoverflow.com/questions/29071312/pagination-in-django-rest-framework-using-api-view
     def get(self, request, format=None):
         posts = self.get_all_posts(request.user)
-        serializedPosts = PostSerializer(posts, many=True)
+
+        page = self.paginate_queryset(posts)
+        if page is not None:
+            serializer = PostSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializedPosts = PostSerializer(posts, many=True)        
         return Response(serializedPosts.data)
-    
+
     def get_all_posts(self, currentUser):
         publicPosts = Post.objects.all().filter(visibility="PUBLIC")
         currentUserPosts = Post.objects.all().filter(author__id=currentUser.pk) # TODO: test currentUser.pk works
@@ -163,23 +214,36 @@ class AllPostsAvailableToCurrentUser(APIView):
         return Post.objects.all().filter(visibility="PRIVATE", visibleTo=currentUser)
 
     def get_queryset_friends_of_a_friend(self, currentUser):
-        currentUserFriends = self.get_friends_of_authorPK(currentUser.pk)
-        temp = self.get_friends_of_authorPK(currentUser.pk)
+        currentUserFriends = get_friends_of_authorPK(currentUser.pk)
+        temp = get_friends_of_authorPK(currentUser.pk)
         for f in currentUserFriends:
-            temp = temp | self.get_friends_of_authorPK(f["user"])
+            temp = temp | get_friends_of_authorPK(f["user"])
         return Post.objects.all().filter(author__in=temp).filter(visibility="FOAF")
-
-    def get_friends_of_authorPK(self, authorPK):
-        following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
-        following_pks = [author['follows'] for author in following]
-        followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
-
-        return followed.filter(user__in=following_pks)
 
     def get_queryset_friends(self, currentUser):
         friendsOfCurrentUser = self.get_friends_of_authorPK(currentUser.pk)
 
         return Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
+
+class PostsByAuthorAvailableToCurrentUser(APIView, PaginationMixin):
+
+    pagination_class = PostsPagination
+
+    def get(self, request, author_id, format=None):
+        publicPosts = Post.objects.all().filter(author__id=author_id).filter(visibility="PUBLIC") 
+        privateToUser = Post.objects.all().filter(visibility="PRIVATE", visibleTo=request.user) 
+        friendsOfCurrentUser = get_friends_of_authorPK(request.user.pk)
+        friendsPosts = Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
+
+        posts = publicPosts | privateToUser | friendsPosts
+
+        page = self.paginate_queryset(posts)
+        if page is not None:
+            serializer = PostSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializedPosts = PostSerializer(posts, many=True)
+        return Response(serializedPosts.data)
 
 # https://richardtier.com/2014/02/25/django-rest-framework-user-endpoint/ (Richard Tier), No code but put in readme
 class LoginView(APIView):

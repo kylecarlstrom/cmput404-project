@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 # REST Framework
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 50,
      # http://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
