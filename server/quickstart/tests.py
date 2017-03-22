@@ -21,7 +21,13 @@ class AccountTests(APITestCase):
 
     def test_get_root(self):
         """ Ensure we can create a new account object. """
-        url = reverse('root')
+        url = reverse("root")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_post_good_post(self):
+        """ POST a valid post expecting a 4XX (is_client_error) """
+        url = reverse("post")
+        obj = {}
+        response = self.client.post(url, obj, format='json')
+        self.assertTrue(status.is_client_error(response.status_code))
