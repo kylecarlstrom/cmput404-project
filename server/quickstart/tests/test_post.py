@@ -16,12 +16,22 @@ class PostTests(APITestCase):
         self.authorUser.set_password('tester123')
         self.authorUser.save()
 
+    def setUpLogin(self):
         self.client.login(username='nixy', password='tester123')
         self.client.force_authenticate(user=self.authorUser)
 
-    def test_post_good_post(self):
-        """ POST a valid post expecting a 4XX (is_client_error) """
+    def test_post_unauth_401(self):
+        """ POSTing to post unauthenticated will result in a 401 """
+        url = reverse("post")
+        obj = {}
+        response = self.client.post(url, obj, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_post_bad_4XX(self):
+        """ POST an empty post expecting a 4XX (is_client_error) """
+        self.setUpLogin()
         url = reverse("post")
         obj = {}
         response = self.client.post(url, obj, format='json')
         self.assertTrue(status.is_client_error(response.status_code))
+        self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
