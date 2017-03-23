@@ -39,6 +39,9 @@ def get_friends_of_authorPK(authorPK):
     followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
     return followed.filter(user__in=following_pks)
 
+def get_author_id_from_url(author):
+    return author['id'].split('/')[-1]
+
 class PostList(generics.ListCreateAPIView):
     """
     List all posts, or create a new post.
@@ -89,7 +92,7 @@ class CommentList(APIView):
     def post(self, request, post_id, format=None):
         data = request.data['comment']
         post = get_object_or_404(Post, pk=post_id)
-        author = get_object_or_404(Author, pk=data['author']['id'])
+        author = get_object_or_404(Author, pk=get_author_id_from_url(data['author']))
         comment = Comment.objects.create(comment=data['comment'], post=post, author=author)
 
         #TODO: Check if they have permission to add comment (i.e. they can see the post)
@@ -163,12 +166,12 @@ class FollowingRelationshipList(APIView):
 
         # Makes more sense to maybe check for foreign or remote before getting
         try:
-            author = Author.objects.get(pk=author_data['id'])
+            author = Author.objects.get(pk=get_author_id_from_url(author_data))
         except ObjectDoesNotExist:
             print('Foreign author')
             author = RemoteAuthor.objects.get_or_create(**author_data)
 
-        friend = get_object_or_404(Author, pk=friend_data['id'])
+        friend = get_object_or_404(Author, pk=get_author_id_from_url(friend_data))
 
         FollowingRelationship.objects.create(user=author, follows=friend)
         return Response(status=201)
