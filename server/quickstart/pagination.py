@@ -22,13 +22,18 @@
 
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.settings import api_settings
 
 class PostsPagination(PageNumberPagination):
     page_size_query_param = 'size'
 
     def get_paginated_response(self, data):
+        page_size = api_settings.PAGE_SIZE
+        if 'size' in self.request.query_params.keys():
+            page_size = self.request.query_params['size']
+
         return Response({
-            'size': 50, # TODO: Unhardcode this
+            'size': page_size,
             'count': self.page.paginator.count,            
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
@@ -39,19 +44,12 @@ class CommentsPagination(PageNumberPagination):
     page_size_query_param = 'size'
 
     def get_paginated_response(self, data):
-        return Response({
-            'size': 50, # TODO: Unhardcode this
-            'count': self.page.paginator.count,            
-            'next': self.get_next_link(),
-            'previous': self.get_previous_link(),
-            'comments': data
-        })
+        page_size = api_settings.PAGE_SIZE
+        if 'size' in self.request.query_params.keys():
+            page_size = self.request.query_params['size']
 
-class CommentsInPostPagination(PageNumberPagination):
-
-    def get_paginated_response(self, data):
         return Response({
-            'size': 50, # TODO: Unhardcode this
+            'size': page_size,
             'count': self.page.paginator.count,            
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
