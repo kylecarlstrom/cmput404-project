@@ -30,7 +30,7 @@ class PostTests(APITestCase):
         self.client.login(username='nixy', password='tester123')
         self.client.force_authenticate(user=self.authorUser)
 
-    def setUpUnAuthLogin(self):
+    def setUpNotActiveLogin(self):
         self.client.login(username="unauth", password="tester123")
         self.client.force_authenticate(user=self.unAuthorizedUser)
 
@@ -38,23 +38,35 @@ class PostTests(APITestCase):
         """ Returns the b64encoded string created for a user and password to be used in the header """
         return "Basic %s" % base64.b64encode("%s:%s" % (us, pw))
 
-    def test_post_unauth_403(self):
-        """ POSTing to post unauthenticated will result in a 403 """
-        # self.setUpUnAuthLogin()
-        url = reverse("post")
-        obj = {}
-        # TODO: get basic auth working
-        response = self.client.post(url, obj, format='json', AUTH_TYPE="Basic", AUTHORIZATION=self.getBasicAuthHeader("nixy", "tester123"))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    # def test_post_unauth_403(self):
+    #     """ POSTing to post unauthenticated will result in a 403 """
+    #     # self.setUpNotActiveLogin()
+    #     url = reverse("post")
+    #     obj = {}
+    #     # TODO: get basic auth working
+    #     response = self.client.post(url, obj, format='json', AUTH_TYPE="Basic", AUTHORIZATION=self.getBasicAuthHeader("nixy", "tester123"))
+    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_post_unauth_403_prime(self):
-        """ **PRIME** POSTing to post unauthenticated will result in a 403 """
+    def test_get_unauth_401(self):
+        """ GETing the public posts w/o any auth will result in a 401 """
         url = reverse("post")
-        obj = {}
-        self.client.auth = HTTPBasicAuth('nixy', 'tester123')
-        # response = self.client.post(url, obj, format='json')
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_unactivated_401(self):
+        """ GETing the public posts w/o being active will result in a 401 """
+        self.setUpNotActiveLogin()
+        url = reverse("post")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_as_author_2XX(self):
+        """ GETing the public posts when logged in as an author will result in a 2XX and data """
+        self.setUpAuthorLogin()
+        url = reverse("post")
+        response = self.client.get(url)
+        self.assertTrue(status.is_success(response.status_code))
+        self.assertTrue(response.data)
 
     def test_post_bad_4XX(self):
         """ POST an empty post expecting a 4XX (is_client_error) """
