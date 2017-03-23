@@ -1,5 +1,4 @@
 import * as types from '../types';
-import uuid from 'uuid/v1';
 
 let URL_PREFIX = `http://${  window.location.hostname  }:8000`;
 /*eslint-disable */
