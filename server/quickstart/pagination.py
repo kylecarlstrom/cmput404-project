@@ -47,6 +47,17 @@ class CommentsPagination(PageNumberPagination):
             'comments': data
         })
 
+class CommentsInPostPagination(PageNumberPagination):
+
+    def get_paginated_response(self, data):
+        return Response({
+            'size': 50, # TODO: Unhardcode this
+            'count': self.page.paginator.count,            
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'comments': data
+        })
+
 class PaginationMixin(object):
     # Written by http://stackoverflow.com/a/31401203 prawg (http://stackoverflow.com/users/4698253/prawg), (CC-BY-SA 3.0)
     @property

@@ -24,6 +24,7 @@ from rest_framework import serializers
 from models import Post, Comment, FollowingRelationship, Author
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from pagination import CommentsInPostPagination
 
 class AuthorSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -33,7 +34,13 @@ class AuthorSerializer(serializers.Serializer):
     
 # Serializes the Comment Model
 # When we read we get the nested data, but we only have to passed the author_id when we write
-class CommentSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    author = AuthorSerializer(read_only=True)
+    class Meta:
+        model = Comment
+        fields=('id', 'comment', 'author')
+
+class CommentPageSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     class Meta:
         model = Comment
@@ -42,13 +49,21 @@ class CommentSerializer(serializers.ModelSerializer):
 # Serializes the Post Model
 # When we read we get the nested data, but we only have to passed the author_id when we write
 # http://www.django-rest-framework.org/api-guide/relations/#api-reference
-class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True, read_only=True)
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    # comments = CommentSerializer(many=True, read_only=True)
     author = AuthorSerializer(read_only=True)
+    comments = serializers.SerializerMethodField('paginated_comments')
 
     class Meta:
         model = Post
         fields = ('id', 'title', 'content', 'description', 'contentType', 'author', 'comments', 'visibility', 'visibleTo')
+
+    def paginated_comments(self, obj):
+        comments = Comment.objects.all().filter(post__id=obj.id).order_by('published')[:5]
+
+        serializer = CommentSerializer(comments, many=True)
+        return serializer.data
+
 
     # http://www.django-rest-framework.org/api-guide/serializers/#saving-instances
     # https://docs.djangoproject.com/en/1.10/topics/db/examples/many_to_many/
