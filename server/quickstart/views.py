@@ -269,7 +269,8 @@ class RegisterView(APIView):
         user.set_password(validated_data['password'])
         user.is_active = False
         user.save()
-        author = Author.objects.create(displayName=displayName, user=user)
+        host = str(request.scheme) + "://" + str(request.get_host())
+        author = Author.objects.create(displayName=displayName, user=user, host=host)
         author.save()
         return Response(status=200)
         
