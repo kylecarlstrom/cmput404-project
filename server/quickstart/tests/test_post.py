@@ -93,3 +93,17 @@ class PostTests(APITestCase):
         }
         response = self.client.post(url, obj, format='json')
         self.assertTrue(status.is_success(response.status_code))
+
+    def test_delete_405(self):
+        """ DELETE should throw a client error as it shouldn't be allowed to delete everyting """
+        self.setUpAuthorLogin()
+        url = reverse("post")
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_put_405(self):
+        """ PUT should throw a client error as it doesn't make sense to put at this endpoint """
+        self.setUpAuthorLogin()
+        url = reverse("post")
+        response = self.client.put(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
