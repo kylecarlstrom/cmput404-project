@@ -76,3 +76,20 @@ class PostTests(APITestCase):
         response = self.client.post(url, obj, format='json')
         self.assertTrue(status.is_client_error(response.status_code))
         self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_post_good_2XX(self):
+        """ POST a good post expecting a 2XX (is_success) """
+        self.setUpAuthorLogin()
+        url = reverse("post")
+        obj = {
+            "title": "some title",
+            "content": "this is a post dude",
+            "description": "im not sure how to describe my post",
+            "contentType": "markdown",
+            "author": "",
+            "comments": [],
+            "visibility": "PUBLIC",
+            "visibleTo": []
+        }
+        response = self.client.post(url, obj, format='json')
+        self.assertTrue(status.is_success(response.status_code))
