@@ -85,7 +85,7 @@ class PostTests(APITestCase):
             "title": title,
             "content": "this is a post dude",
             "description": "im not sure how to describe my post",
-            "contentType": "markdown",
+            "contentType": "text/markdown",
             "author": "",
             "comments": [],
             "visibility": visibility,
