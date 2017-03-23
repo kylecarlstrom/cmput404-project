@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from requests.auth import HTTPBasicAuth
 import base64
+import json
 
 class PostTests(APITestCase):
     """ This is the home of all of our tests relating to the post url """
@@ -77,21 +78,25 @@ class PostTests(APITestCase):
         self.assertTrue(status.is_client_error(response.status_code))
         self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_post_good_2XX(self):
-        """ POST a good post expecting a 2XX (is_success) """
+    def post_a_post_obj(self, title, visibility):
         self.setUpAuthorLogin()
         url = reverse("post")
         obj = {
-            "title": "some title",
+            "title": title,
             "content": "this is a post dude",
             "description": "im not sure how to describe my post",
             "contentType": "markdown",
             "author": "",
             "comments": [],
-            "visibility": "PUBLIC",
+            "visibility": visibility,
             "visibleTo": []
         }
         response = self.client.post(url, obj, format='json')
+        return response
+
+    def test_post_good_2XX(self):
+        """ POST a good post expecting a 2XX (is_success) """
+        response = self.post_a_post_obj("testing a good post", "PUBLIC")
         self.assertTrue(status.is_success(response.status_code))
 
     def test_delete_405(self):
@@ -107,3 +112,13 @@ class PostTests(APITestCase):
         url = reverse("post")
         response = self.client.put(url)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_get_only_returns_public(self):
+        """ GET should only return posts that are public according to spec """
+        vis = ["PUBLIC", "PRIVATE", "FOAF", "FRIENDS", "SERVERONLY"]
+        for v in vis:
+            self.post_a_post_obj("testing a %s post" % v, v)
+        url = reverse("post")
+        response = self.client.get(url)
+        self.assertTrue(status.is_success(response.status_code))
+        self.assertTrue(response.data["count"] == 1)  # only the PUBLIC post should be returned
