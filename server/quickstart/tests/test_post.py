@@ -4,6 +4,7 @@ from django.test import Client
 from server.quickstart.models import Post, Author
 from rest_framework import status
 from rest_framework.test import APITestCase
+from requests.auth import HTTPBasicAuth
 import base64
 
 class PostTests(APITestCase):
@@ -43,7 +44,16 @@ class PostTests(APITestCase):
         url = reverse("post")
         obj = {}
         # TODO: get basic auth working
-        response = self.client.post(url, obj, format='json', AUTHORIZATION=self.getBasicAuthHeader("nixy", "tester123"))
+        response = self.client.post(url, obj, format='json', AUTH_TYPE="Basic", AUTHORIZATION=self.getBasicAuthHeader("nixy", "tester123"))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_post_unauth_403_prime(self):
+        """ **PRIME** POSTing to post unauthenticated will result in a 403 """
+        url = reverse("post")
+        obj = {}
+        self.client.auth = HTTPBasicAuth('nixy', 'tester123')
+        # response = self.client.post(url, obj, format='json')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_post_bad_4XX(self):
