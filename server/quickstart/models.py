@@ -27,6 +27,8 @@ from django.db import models
 class Author(models.Model):
     user = models.OneToOneField(User)
     displayName = models.CharField(max_length=150)
+    host = models.URLField(default="http://127.0.0.1:8000")
+    url = models.URLField()
 
     def __unicode__(self):
         return str(self.displayName)
@@ -82,4 +84,3 @@ class FollowingRelationship(models.Model):
 
     def __unicode__(self):
         return str(self.user) + '_follows_' + str(self.follows)
-

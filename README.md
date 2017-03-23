@@ -45,6 +45,9 @@ Deploy non-master
 > git push heroku branch-name-here:master
 ```
 ## Heroku Tips
+Database  
+Use this [https://elements.heroku.com/addons/heroku-postgresql](https://elements.heroku.com/addons/heroku-postgresql)
+
 Migrate
 ```
 > heroku run python manage.py migrate
