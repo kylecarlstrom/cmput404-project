@@ -27,7 +27,7 @@ from django.contrib.auth import authenticate
 from pagination import CommentsInPostPagination
 
 class AuthorSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.UUIDField(format='hex_verbose')
     displayName = serializers.CharField(max_length=150)
     url = serializers.URLField()
     host = serializers.URLField()
@@ -44,7 +44,7 @@ class CommentPageSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     class Meta:
         model = Comment
-        fields=('id', 'comment', 'author')
+        fields=('id', 'comment', 'author', 'published')
 
 # Serializes the Post Model
 # When we read we get the nested data, but we only have to passed the author_id when we write
@@ -56,7 +56,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'content', 'description', 'contentType', 'author', 'comments', 'visibility', 'visibleTo')
+        fields = ('id', 'title', 'content', 'description', 'contentType', 'author', 'comments', 'visibility', 'visibleTo', 'published')
 
     def paginated_comments(self, obj):
         comments = Comment.objects.all().filter(post__id=obj.id).order_by('published')[:5]
