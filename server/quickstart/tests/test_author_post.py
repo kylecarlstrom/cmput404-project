@@ -128,3 +128,14 @@ class AuthorPostTest(APITestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertTrue(status.is_success(response.status_code))
         self.assertTrue(response.data["count"] == 4)  # should get PUBLIC, SERVERONLY, FRIENDS, and FOAF
+
+    def test_authorposturl_get_foaf_posts(self):
+        """ GETing friend posts should return the approprite number of posts """
+        vis = ["PUBLIC", "PRIVATE", "FOAF", "FRIENDS", "SERVERONLY"]
+        for v in vis:
+            self.post_a_post_obj("%s post" % v, v, self.FOAF_USER_NAME, self.FOAF_USER_PASS)
+        url = reverse("authorPost")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertTrue(status.is_success(response.status_code))
+        self.assertTrue(response.data["count"] == 3)  # should get PUBLIC, SERVERONLY, and FOAF
