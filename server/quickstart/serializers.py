@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 from rest_framework import serializers
-from models import Post, Comment, FollowingRelationship, Author
+from models import Post, Comment, FollowingRelationship, Author, Node
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
@@ -62,3 +62,9 @@ class PostSerializer(serializers.ModelSerializer):
         for user in visibleTo:
             post.visibleTo.add(user)
         return post
+
+# Serializes the Node Model
+class NodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Node
+        fields = ('url', 'username', 'password')

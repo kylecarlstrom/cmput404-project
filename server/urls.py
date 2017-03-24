@@ -35,5 +35,6 @@ urlpatterns = [
     url(r'^register/$', views.RegisterView.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^$', TemplateView.as_view(template_name="react.html"), name="root"),
-    url(r'^docs/', include('rest_framework_docs.urls'))
+    url(r'^docs/', include('rest_framework_docs.urls')),
+    url(r'^api/nodes/$', views.NodesView.as_view()),
 ]

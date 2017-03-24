@@ -20,9 +20,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from models import Comment, Post, FollowingRelationship, Author, RemoteAuthor
+from models import Comment, Post, FollowingRelationship, Author, RemoteAuthor, Node
 from django.contrib.auth.models import User
-from serializers import CommentSerializer, PostSerializer, AuthorSerializer
+from serializers import CommentSerializer, PostSerializer, AuthorSerializer, NodeSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,6 +32,9 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from pagination import PostsPagination, PaginationMixin
+
+import requests
+
 
 def get_friends_of_authorPK(authorPK):
     following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
@@ -49,9 +52,25 @@ class PostList(generics.ListCreateAPIView):
     post: 
     create a new instance of post
     """
-    queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = PostsPagination
+
+    def get_queryset(self):
+        foreign_author = self.request.query_params.get('username', None)
+        currentUser = self.request.user.username
+        if(foreign_author):
+            return Post.objects.all().exclude(visibility="SERVERONLY")
+        
+        foreign_nodes = Node.objects.all()
+        for node in foreign_nodes:
+            try:
+                urlString = node.url + ':8000/posts'
+                req = requests.get(urlString)
+                print req.content
+                
+            except:
+                print "something is wrong!"
+        return Post.objects.all()
 
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
     # Written by andi (http://stackoverflow.com/users/953553/andi) http://stackoverflow.com/a/34084329, modified by Kyle Carlstrom
@@ -275,3 +294,7 @@ class RegisterView(APIView):
         author.save()
         return Response(status=200)
         
+class NodesView(generics.ListCreateAPIView):
+    #TODO add permissions
+    serializer_class = NodeSerializer
+    queryset = Node.objects.all()
