@@ -12,19 +12,23 @@ class AuthorPostTest(APITestCase):
     AUTHOR_USER_NAME = 'aName'
     AUTHOR_USER_PASS = 'password127'
     AUTHOR_USER_MAIL = 'aName@example.com'
+    STRANGER_USER_NAME = 'sName'
+    STRANGER_USER_PASS = 'password127'
+    STRANGER_USER_MAIL = 'sName@example.com'
     NOT_ACTIVE_USER_NAME = 'notActiveName'
     NOT_ACTIVE_USER_MAIL = 'notActiveName@example.com'
     NOT_ACTIVE_USER_PASS = 'password127'
 
+    def createAuthor(self, us, em, pw):
+        authorUser = User.objects.create_user(us, em, pw)
+        authorUser.save()
+        author = Author.objects.create(displayName=us, user=authorUser)
+        author.save()
+
     def setUp(self):
         """ Set up is run before each test """
-        self.authorUser = User.objects.create_user(self.AUTHOR_USER_NAME,
-                                                   self.AUTHOR_USER_MAIL,
-                                                   self.AUTHOR_USER_PASS)
-        self.authorUser.save()
-        author = Author.objects.create(displayName=self.AUTHOR_USER_NAME,
-                                       user=self.authorUser)
-        author.save()
+        self.createAuthor(self.AUTHOR_USER_NAME, self.AUTHOR_USER_MAIL, self.AUTHOR_USER_PASS)
+        self.createAuthor(self.STRANGER_USER_NAME, self.STRANGER_USER_MAIL, self.STRANGER_USER_PASS)
 
         self.unAuthorizedUser = User.objects.create_user(self.NOT_ACTIVE_USER_NAME,
                                                          self.NOT_ACTIVE_USER_MAIL,
@@ -58,3 +62,41 @@ class AuthorPostTest(APITestCase):
         basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
         response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertTrue(status.is_success(response.status_code))
+
+    def post_a_post_obj(self, title, visibility, us, pw):
+        url = reverse("post")
+        obj = {
+            "title": title,
+            "content": "this is a post dude",
+            "description": "im not sure how to describe my post",
+            "contentType": "text/markdown",
+            "author": "",
+            "comments": [],
+            "visibility": visibility,
+            "visibleTo": []
+        }
+        basicAuth = self.getBasicAuthHeader(us, pw)
+        response = self.client.post(url, obj, format='json', HTTP_AUTHORIZATION=basicAuth)
+        return response
+
+    def test_authorposturl_get_your_posts(self):
+        """ GETing while loggin w/ Basic Auth should return a 2XX """
+        vis = ["PUBLIC", "PRIVATE", "FOAF", "FRIENDS", "SERVERONLY"]
+        for v in vis:
+            self.post_a_post_obj("%s post" % v, v, self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        url = reverse("authorPost")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertTrue(status.is_success(response.status_code))
+        self.assertTrue(response.data["count"] == 5)  # should get all posts made by me
+
+    def test_authorposturl_get_stranger_posts(self):
+        """ GETing while loggin w/ Basic Auth should return a 2XX """
+        vis = ["PUBLIC", "PRIVATE", "FOAF", "FRIENDS", "SERVERONLY"]
+        for v in vis:
+            self.post_a_post_obj("%s post" % v, v, self.STRANGER_USER_NAME, self.STRANGER_USER_PASS)
+        url = reverse("authorPost")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertTrue(status.is_success(response.status_code))
+        self.assertTrue(response.data["count"] == 2)  # should get PUBLIC and SERVERONLY
