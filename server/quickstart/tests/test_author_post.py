@@ -80,6 +80,27 @@ class AuthorPostTest(APITestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertTrue(status.is_success(response.status_code))
 
+    def test_authorposturl_delete_405(self):
+        """ DELETE should throw a client error as it shouldn't be allowed to delete everyting """
+        url = reverse("authorPost")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.delete(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_authorposturl_put_405(self):
+        """ PUT should throw a client error as it doesn't make sense to put at this endpoint """
+        url = reverse("authorPost")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.put(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_authorposturl_post_405(self):
+        """ PUT should throw a client error as it doesn't make sense to put at this endpoint """
+        url = reverse("authorPost")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.post(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def post_a_post_obj(self, title, visibility, us, pw):
         url = reverse("post")
         obj = {
