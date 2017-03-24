@@ -32,7 +32,7 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from pagination import PostsPagination, PaginationMixin
-
+from requests.auth import HTTPBasicAuth
 import requests
 
 
@@ -42,16 +42,8 @@ def get_friends_of_authorPK(authorPK):
     followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
     return followed.filter(user__in=following_pks)
 
-class PostList(generics.ListCreateAPIView):
-    """
-    List all posts, or create a new post.
+class PostList1(generics.ListCreateAPIView):
 
-    get: 
-    returns all the posts.
-
-    post: 
-    create a new instance of post
-    """
     serializer_class = PostSerializer
     pagination_class = PostsPagination
 
@@ -63,13 +55,18 @@ class PostList(generics.ListCreateAPIView):
         
         foreign_nodes = Node.objects.all()
         for node in foreign_nodes:
-            try:
-                urlString = node.url + ':8000/posts'
-                req = requests.get(urlString)
-                print req.content
-                
-            except:
-                print "something is wrong!"
+            urlString = node.url + '/posts/'
+            print urlString
+            # req = requests.get(urlString, auth=HTTPBasicAuth(node.username, node.password))
+
+        # for node in foreign_nodes:
+        #     try:
+        #         urlString = node.url + ':8000/posts/'
+        #         req = requests.get(urlString)
+        #         #print req.content
+
+        #     except Exception as e:
+        #         print e
         return Post.objects.all()
 
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/#associating-snippets-with-users
@@ -80,6 +77,30 @@ class PostList(generics.ListCreateAPIView):
         return {
             'author': author
         }
+
+
+class PostList(APIView):
+    
+    def get(self, request, format=None):
+        currentUser = request.user.id
+        nodeUser = Node.objects.all().filter(user=currentUser)
+        if(nodeUser.count()>0):
+            allPosts = Post.objects.all().exclude(visibility="SERVERONLY")
+            serializedPosts = PostSerializer(allPosts, many=True)
+            return Response(serializedPosts.data)
+        
+        allPosts = Post.objects.all()
+        serializedPosts = PostSerializer(allPosts, many=True)
+        return Response(serializedPosts.data)
+
+#TODO fix this post function
+    def post(self, request, format=None):
+        serializedPost = PostSerializer(data=request.data)
+        if serializedPost.is_valid():
+            serializedPost.save()
+            return Response(serializedPost.data, status=201)
+        return Response(serializedPost.errors, status=400)
+
 
 class PostDetail(APIView):
     def delete(self, request, post_id, format=None):

@@ -88,5 +88,6 @@ class FollowingRelationship(models.Model):
 #This model is used for connecting with other groups
 class Node(models.Model):
     url = models.URLField()
+    user = models.OneToOneField(User)
     username = models.CharField(max_length=140)
     password = models.CharField(max_length=140)
