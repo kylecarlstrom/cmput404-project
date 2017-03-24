@@ -62,14 +62,42 @@ class AuthorPostTest(APITestCase):
 
     def test_authoridposturl_get_unauth_401(self):
         """ GETing the posts available to an author w/ my author id w/o any auth will result in a 401 """
-        url = reverse("authorIdPosts", args=[self.author])
+        url = reverse("authorIdPosts", args=[self.author.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_authoridposturl_get_unactivated_401(self):
         """ GETing the posts available to an an author w/ unactivated user w/o any auth will result in a 401 """
-        url = reverse("authorIdPosts", args=[self.author])
+        url = reverse("authorIdPosts", args=[self.author.pk])
         basicAuth = self.getBasicAuthHeader(self.NOT_ACTIVE_USER_NAME, self.NOT_ACTIVE_USER_PASS)
         response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_authoridposturl_get_basic_auth(self):
+        """ GETing the posts by author while loggin w/ Basic Auth as author should return a 2XX """
+        url = reverse("authorIdPosts", args=[self.author.pk])
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertTrue(status.is_success(response.status_code))
+
+    def test_authoridposturl_delete_405(self):
+        """ DELETE should throw a client error as it shouldn't be allowed to delete everything for another author """
+        url = reverse("authorIdPosts", args=[self.author.pk])
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.delete(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_authoridposturl_put_405(self):
+        """ PUT should throw a client error as it doesn't make sense to put at this endpoint """
+        url = reverse("authorIdPosts", args=[self.author.pk])
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.put(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_authoridposturl_post_405(self):
+        """ PUT should throw a client error as it doesn't make sense to put at this endpoint """
+        url = reverse("authorIdPosts", args=[self.author.pk])
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.post(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
