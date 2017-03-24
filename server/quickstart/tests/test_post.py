@@ -11,28 +11,40 @@ import json
 class PostTests(APITestCase):
     """ This is the home of all of our tests relating to the post url """
 
+    AUTHOR_USER_NAME = 'aName'
+    AUTHOR_USER_PASS = 'password127'
+    AUTHOR_USER_MAIL = 'aName@example.com'
+    NOT_ACTIVE_USER_NAME = 'notActiveName'
+    NOT_ACTIVE_USER_MAIL = 'notActiveName@example.com'
+    NOT_ACTIVE_USER_PASS = 'password127'
+
     def setUp(self):
         """ Set up is run before each test """
         # accessed on March 12, 2017
         # from http://www.django-rest-framework.org/api-guide/testing/
-        self.authorUser = User.objects.create_user('nixy', 'nixy@nixy.com','tester123')
-        self.authorUser.set_password('tester123')
+        self.authorUser = User.objects.create_user(self.AUTHOR_USER_NAME,
+                                                   self.AUTHOR_USER_MAIL,
+                                                   self.AUTHOR_USER_PASS)
         self.authorUser.save()
-        author = Author.objects.create(displayName="Nixy Disp Name", user=self.authorUser)
+        author = Author.objects.create(displayName=self.AUTHOR_USER_NAME,
+                                       user=self.authorUser)
         author.save()
 
-        self.unAuthorizedUser = User.objects.create_user("unauth", "unauth@unauth.com", "tester123")
+        self.unAuthorizedUser = User.objects.create_user(self.NOT_ACTIVE_USER_NAME,
+                                                         self.NOT_ACTIVE_USER_MAIL,
+                                                         self.NOT_ACTIVE_USER_PASS)
         self.unAuthorizedUser.is_active = False  # this is crucial to make an unAuthorizedUser
         self.unAuthorizedUser.save()
-        unAuthAuthor = Author.objects.create(displayName="Unauth", user=self.unAuthorizedUser)
+        unAuthAuthor = Author.objects.create(displayName=self.NOT_ACTIVE_USER_NAME,
+                                             user=self.unAuthorizedUser)
         unAuthAuthor.save()
 
     def setUpAuthorLogin(self):
-        self.client.login(username='nixy', password='tester123')
+        self.client.login(username=self.AUTHOR_USER_NAME, password=self.AUTHOR_USER_PASS)
         self.client.force_authenticate(user=self.authorUser)
 
     def setUpNotActiveLogin(self):
-        self.client.login(username="unauth", password="tester123")
+        self.client.login(username=self.NOT_ACTIVE_USER_NAME, password=self.NOT_ACTIVE_USER_PASS)
         self.client.force_authenticate(user=self.unAuthorizedUser)
 
     def getBasicAuthHeader(self, us, pw):
@@ -48,14 +60,14 @@ class PostTests(APITestCase):
     def test_get_basic_auth(self):
         """ GETing while loggin w/ Basic Auth should return a 2XX """
         url = reverse("post")
-        basicAuth = self.getBasicAuthHeader("nixy", "tester123")
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
         response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertTrue(status.is_success(response.status_code))
 
     def test_get_unactivated_401(self):
         """ GETing the public posts w/o being active will result in a 401 """
         url = reverse("post")
-        basicAuth = self.getBasicAuthHeader("unauth", "tester123")
+        basicAuth = self.getBasicAuthHeader(self.NOT_ACTIVE_USER_NAME, self.NOT_ACTIVE_USER_PASS)
         response = self.client.get(url, AUTH_TYPE="Basic", HTTP_AUTHORIZATION=basicAuth)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
