@@ -230,8 +230,8 @@ class PostsByAuthorAvailableToCurrentUser(APIView, PaginationMixin):
 
     def get(self, request, author_id, format=None):
         publicPosts = Post.objects.all().filter(author__id=author_id).filter(visibility="PUBLIC") 
-        privateToUser = Post.objects.all().filter(visibility="PRIVATE", visibleTo=request.user) 
-        friendsOfCurrentUser = get_friends_of_authorPK(request.user.pk)
+        privateToUser = Post.objects.all().filter(visibility="PRIVATE", visibleTo=request.user.author) 
+        friendsOfCurrentUser = get_friends_of_authorPK(request.user.author.pk)
         friendsPosts = Post.objects.all().filter(author__in=friendsOfCurrentUser).filter(visibility="FRIENDS")
 
         posts = publicPosts | privateToUser | friendsPosts
