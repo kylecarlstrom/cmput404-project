@@ -39,14 +39,6 @@ class PostTests(APITestCase):
                                              user=self.unAuthorizedUser)
         unAuthAuthor.save()
 
-    def setUpAuthorLogin(self):
-        self.client.login(username=self.AUTHOR_USER_NAME, password=self.AUTHOR_USER_PASS)
-        self.client.force_authenticate(user=self.authorUser)
-
-    def setUpNotActiveLogin(self):
-        self.client.login(username=self.NOT_ACTIVE_USER_NAME, password=self.NOT_ACTIVE_USER_PASS)
-        self.client.force_authenticate(user=self.unAuthorizedUser)
-
     def getBasicAuthHeader(self, us, pw):
         """ Returns the b64encoded string created for a user and password to be used in the header """
         return "Basic %s" % base64.b64encode("%s:%s" % (us, pw))
@@ -73,23 +65,22 @@ class PostTests(APITestCase):
 
     def test_get_as_author_2XX(self):
         """ GETing the public posts when logged in as an author will result in a 2XX and data """
-        self.setUpAuthorLogin()
         url = reverse("post")
-        response = self.client.get(url)
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertTrue(status.is_success(response.status_code))
         self.assertTrue(response.data)
 
     def test_post_bad_4XX(self):
         """ POST an empty post expecting a 4XX (is_client_error) """
-        self.setUpAuthorLogin()
         url = reverse("post")
         obj = {}
-        response = self.client.post(url, obj, format='json')
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.post(url, obj, format='json', HTTP_AUTHORIZATION=basicAuth)
         self.assertTrue(status.is_client_error(response.status_code))
         self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def post_a_post_obj(self, title, visibility):
-        self.setUpAuthorLogin()
         url = reverse("post")
         obj = {
             "title": title,
@@ -101,7 +92,8 @@ class PostTests(APITestCase):
             "visibility": visibility,
             "visibleTo": []
         }
-        response = self.client.post(url, obj, format='json')
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.post(url, obj, format='json', HTTP_AUTHORIZATION=basicAuth)
         return response
 
     def test_post_good_2XX(self):
@@ -111,16 +103,16 @@ class PostTests(APITestCase):
 
     def test_delete_405(self):
         """ DELETE should throw a client error as it shouldn't be allowed to delete everyting """
-        self.setUpAuthorLogin()
         url = reverse("post")
-        response = self.client.delete(url)
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.delete(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_put_405(self):
         """ PUT should throw a client error as it doesn't make sense to put at this endpoint """
-        self.setUpAuthorLogin()
         url = reverse("post")
-        response = self.client.put(url)
+        basicAuth = self.getBasicAuthHeader(self.AUTHOR_USER_NAME, self.AUTHOR_USER_PASS)
+        response = self.client.put(url, HTTP_AUTHORIZATION=basicAuth)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_get_only_returns_public(self):
