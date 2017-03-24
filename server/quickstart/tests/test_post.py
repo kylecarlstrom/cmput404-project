@@ -39,26 +39,24 @@ class PostTests(APITestCase):
         """ Returns the b64encoded string created for a user and password to be used in the header """
         return "Basic %s" % base64.b64encode("%s:%s" % (us, pw))
 
-    # def test_post_unauth_403(self):
-    #     """ POSTing to post unauthenticated will result in a 403 """
-    #     # self.setUpNotActiveLogin()
-    #     url = reverse("post")
-    #     obj = {}
-    #     # TODO: get basic auth working
-    #     response = self.client.post(url, obj, format='json', AUTH_TYPE="Basic", AUTHORIZATION=self.getBasicAuthHeader("nixy", "tester123"))
-    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_get_unauth_401(self):
         """ GETing the public posts w/o any auth will result in a 401 """
         url = reverse("post")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_get_basic_auth(self):
+        """ GETing while loggin w/ Basic Auth should return a 2XX """
+        url = reverse("post")
+        basicAuth = self.getBasicAuthHeader("nixy", "tester123")
+        response = self.client.get(url, HTTP_AUTHORIZATION=basicAuth)
+        self.assertTrue(status.is_success(response.status_code))
+
     def test_get_unactivated_401(self):
         """ GETing the public posts w/o being active will result in a 401 """
-        self.setUpNotActiveLogin()
         url = reverse("post")
-        response = self.client.get(url)
+        basicAuth = self.getBasicAuthHeader("unauth", "tester123")
+        response = self.client.get(url, AUTH_TYPE="Basic", HTTP_AUTHORIZATION=basicAuth)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_as_author_2XX(self):
