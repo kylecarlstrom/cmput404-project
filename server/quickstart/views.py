@@ -32,6 +32,7 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from pagination import PostsPagination, PaginationMixin
+import re
 
 def get_friends_of_authorPK(authorPK):
     following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
@@ -40,7 +41,7 @@ def get_friends_of_authorPK(authorPK):
     return followed.filter(user__in=following_pks)
 
 def get_author_id_from_url(author):
-    return author['id'].split('/')[-1]
+    return re.search(r'author\/([a-zA-Z0-9-]+)\/?$', author['id']).group(1)
 
 class PostList(generics.ListCreateAPIView):
     """

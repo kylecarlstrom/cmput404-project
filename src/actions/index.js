@@ -7,8 +7,7 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 function getUUIDFromId(id) {
-  const userFields = id.split('/');
-  return userFields[userFields.length - 1]
+  return /author\/([a-zA-Z0-9-]+)\/?$/.exec(id, 'g')[1];
 }
 /*eslint-enable */
 /*
