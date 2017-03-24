@@ -32,12 +32,16 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from pagination import PostsPagination, PaginationMixin
+import re
 
 def get_friends_of_authorPK(authorPK):
     following = FollowingRelationship.objects.filter(user=authorPK).values('follows') # everyone currentUser follows
     following_pks = [author['follows'] for author in following]
     followed = FollowingRelationship.objects.filter(follows=authorPK).values('user')  # everyone that follows currentUser
     return followed.filter(user__in=following_pks)
+
+def get_author_id_from_url(author):
+    return re.search(r'author\/([a-zA-Z0-9-]+)\/?$', author['id']).group(1)
 
 class PostList(generics.ListCreateAPIView):
     """
@@ -89,7 +93,7 @@ class CommentList(APIView):
     def post(self, request, post_id, format=None):
         data = request.data['comment']
         post = get_object_or_404(Post, pk=post_id)
-        author = get_object_or_404(Author, pk=data['author']['id'])
+        author = get_object_or_404(Author, pk=get_author_id_from_url(data['author']))
         comment = Comment.objects.create(comment=data['comment'], post=post, author=author)
 
         #TODO: Check if they have permission to add comment (i.e. they can see the post)
@@ -163,12 +167,12 @@ class FollowingRelationshipList(APIView):
 
         # Makes more sense to maybe check for foreign or remote before getting
         try:
-            author = Author.objects.get(pk=author_data['id'])
+            author = Author.objects.get(pk=get_author_id_from_url(author_data))
         except ObjectDoesNotExist:
             print('Foreign author')
             author = RemoteAuthor.objects.get_or_create(**author_data)
 
-        friend = get_object_or_404(Author, pk=friend_data['id'])
+        friend = get_object_or_404(Author, pk=get_author_id_from_url(friend_data))
 
         FollowingRelationship.objects.create(user=author, follows=friend)
         return Response(status=201)
@@ -248,8 +252,7 @@ class PostsByAuthorAvailableToCurrentUser(APIView, PaginationMixin):
 class LoginView(APIView):
     "Login and get a response"
     def post(self, request, format=None):
-        user = get_object_or_404(User, pk=request.user.id)
-        author = get_object_or_404(Author, user=user)
+        author = get_object_or_404(Author, user=request.user)
         serialized_data = AuthorSerializer(author).data
         return Response(data=serialized_data, status=200)
 
@@ -270,7 +273,8 @@ class RegisterView(APIView):
         user.set_password(validated_data['password'])
         user.is_active = False
         user.save()
-        author = Author.objects.create(displayName=displayName, user=user)
+        host = str(request.scheme) + "://" + str(request.get_host())
+        author = Author.objects.create(displayName=displayName, user=user, host=host)
         author.save()
         return Response(status=200)
         
